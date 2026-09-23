@@ -14,7 +14,7 @@ export default function Principal() {
       descripcion: 'ras la dolorosa muerte de Susannah (la madre de los hermanos Fisher), el grupo está distanciado y Belly siente que este verano está perdido. Sin embargo, todo cambia cuando Conrad desaparece sin dejar rastro. Belly y Jeremiah viajan juntos a la casa de la playa en Cousins Beach para buscarlo, lo que reaviva la tensión del triángulo amoroso y los obliga a enfrentar su duelo y sus sentimientos.',
     },
     {
-      id: 2, 
+      id: 2,
       titulo: 'Principito',
       autor: 'Antoine de Saint-Exupéry.',
       descripcion: 'El principito cuenta la historia de un aviador que se queda varado en medio del desierto del Sahara tras sufrir una avería en su avión. Lejos de la civilización, se encuentra con un misterioso pequeño príncipe que viene de un asteroide lejano.'
@@ -81,7 +81,7 @@ export default function Principal() {
             <a href="#inicio" className="text-dark text-decoration-none fw-semibold active-link">Inicio</a>
             <a href="#libros" className="text-dark text-decoration-none fw-semibold">Librod</a>
             <a href="#categorias" className="text-dark text-decoration-none fw-semibold">Categorias</a>
-            <a href="#sucursales" className="text-dark text-decoration-none fw-semibold">Eventos de la biblioteca</a>
+            <a href="/eventos" className="text-dark text-decoration-none fw-semibold">Eventos de la biblioteca</a>
             <a href="#nuevos" className="text-dark text-decoration-none fw-semibold">Club de lectura</a>
             <a href="#nosotros" className="text-dark text-decoration-none fw-semibold">Sobre nosotrosS</a>
           </nav>
