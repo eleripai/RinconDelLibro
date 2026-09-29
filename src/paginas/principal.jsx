@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import '../css/principal.css';
 import principitoL from "../assets/imagenesL/principitoL.jpg";
 import AnafrankL from "../assets/imagenesL/AnafrankL.jpg";
-import gatosguerreros from "../assets/donquijoteL.jpg";
-
+import leonbrujaropero from "../assets/imagenesL/leonbrujaropero.jpg";
+import pinocho from "../assets/imagenesL/pinocho.jpg";
+import gatosguerreros from "../assets/imagenesL/gatosguerreros.jpg"
 export default function Principal() {
   const [searchTerm, setSearchTerm] = useState('');
   const [showScrollTop, setShowScrollTop] = useState(false);
@@ -11,36 +12,49 @@ export default function Principal() {
   const libros = [
     {
       id: 1,
-      titulo: 'No hay verano sin ti',
-      autor: 'Jenny Han',
-      descripcion: 'Tras la dolorosa muerte de Susannah (la madre de los hermanos Fisher), el grupo está distanciado y Belly siente que este verano está perdido. Sin embargo, todo cambia cuando Conrad desaparece sin dejar rastro. Belly y Jeremiah viajan juntos a la casa de la playa en Cousins Beach para buscarlo, lo que reaviva la tensión del triángulo amoroso y los obliga a enfrentar su duelo y sus sentimientos.'
+      titulo: 'pinocho',
+      autor: 'carlo collodi',
+      descripcion: 'Tras la dolorosa muerte de SusannaUn humilde carpintero llamado Geppetto fabrica un muñeco de madera al que llama Pinocho. Sorprendentemente, la marioneta cobra vida propia, pero resulta ser desobediente, caprichosa y propensta a meterse en problemas. Cada vez que dice una mentira, su nariz de madera crece. A lo largo de una serie de desatadas y a veces oscuras aventuras —en las que conoce a pícaros personajes como el Zorro y el Gato, se convierte en burro y termina sumergido en el mar—, Pinocho deberá aprender lecciones sobre el esfuerzo, la honestidad y la empatía para cumplir su mayor deseo: convertirse en un niño de verdad.',
+      imagen: pinocho
     },
+
     {
       id: 2,
-      titulo: 'Principito',
-      autor: 'Antoine de Saint-Exupéry.',
-      descripcion: 'El principito cuenta la historia de un aviador que se queda varado en medio del desierto del Sahara tras sufrir una avería en su avión. Lejos de la civilización, se encuentra con un misterioso pequeño príncipe que viene de un asteroide lejano.'
-    },
-    {
-      id: 3,
       titulo: 'Gatos Guerreros',
       autor: 'Erin Hunter',
       descripcion: 'Los gatos guerreros narra la historia de cuatro clanes de felinos salvajes —el Clan del Trueno, el Clan del Río, el Clan del Viento y el Clan de la Sombra— que coexisten en un bosque guiados por sus propias leyes y un estricto código de honor.',
+      imagen: gatosguerreros
     },
     {
-      id: 4,
+      id: 3,
       titulo: 'El Principito',
       autor: 'Antoine de Saint-Exupéry',
       descripcion: 'Un cuento poético sobre un pequeño príncipe que viaja por el universo descubriendo la forma en que los adultos ven la vida.',
       imagen: principitoL
     },
     {
-      id: 5,
+      id: 4,
       titulo: 'Ana Frank',
       autor: 'Ana frank',
-      descripcion: 'El diario de Ana Frank es el testimonio real de una niña judía de trece años que debe ocultarse junto a su familia y otras cuatro personas en un escondite secreto en Ámsterdam, con el fin de escapar de la persecución nazi durante la Segunda Guerra Mundial.', 
+      descripcion: 'El diario de Ana Frank es el testimonio real de una niña judía de trece años que debe ocultarse junto a su familia y otras cuatro personas en un escondite secreto en Ámsterdam, con el fin de escapar de la persecución nazi durante la Segunda Guerra Mundial.',
       imagen: AnafrankL
-    }
+    },
+    {
+      id: 5,
+      titulo: 'Cruce de caminosAutor',
+      Autor: 'Naira Gamboa',
+      Sinopsis: 'Es una novela de ficción psicológica y dramática centrada en las decisiones personales y los giros inesperados del destino. La historia explora cómo los caminos de distintas personas se entrelazan de manera inevitable cuando enfrentan pérdidas, dilemas morales o la búsqueda de su verdadera identidad. A través del encuentro de sus protagonistas en momentos cruciales de sus vidas, la trama reflexiona sobre las consecuencias de cada elección y cómo las conexiones humanas pueden cambiar el rumbo de nuestra existencia',
+      imagen: cruceL
+    },
+    {
+      titulo: 'El león, la bruja y el ropero',
+      Autor: 'C. S. Lewis',
+      Sinopsis: 'Cuatro hermanos —Peter, Susan, Edmund y Lucy— son enviados a una antigua casa de campo para protegerse de los bombardeos durante la Segunda Guerra Mundial. Mientras exploran la mansión, Lucy descubre un ropero mágico que sirve como entrada a Narnia, un mundo paralelo habitado por criaturas parlantes y seres mitológicos. Narnia se encuentra sometida bajo un invierno eterno sin Navidad impuesto por la malvada Bruja Blanca. Con la ayuda del poderoso y sabio león Aslan, los cuatro niños lucharán para romper el hechizo de la Bruja y devolver la paz al reino.',
+      imagen: leonbrujaropero
+    },
+
+
+
   ];
 
   useEffect(() => {
@@ -69,7 +83,7 @@ export default function Principal() {
   };
 
   return (
-    <div 
+    <div
       className="rincon-container"
       style={{
         backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.85)), url('https://w0.peakpx.com/wallpaper/286/775/HD-wallpaper-library-architecture-house-cool-fun.jpg')`,
