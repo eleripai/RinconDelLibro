@@ -22,18 +22,19 @@ import {
 const EVENTOS_INICIALES = [
   {
     id: 1,
-    titulo: 'Presentación oficial: "cien años"',
+    titulo: 'Conversatorio: "cien años"',
     autor: 'Gabriel García Márquez',
     libro: 'Cien años de soledad',
     fecha: '30 de mayo de 1967',
     horarios: ['17:00 HS', '18:30 HS', '20:00 HS'],
     formato: 'Presencial',
     lugar: 'Librería Central - Salón Principal (Madrid)',
-    categoria: 'relata la saga de siete generaciones de la familia Buendía en el pueblo de Macondo. A través del realismo mágico, la obra entrelaza la soledad, el amor, los conflictos políticos y el destino trágico de sus personajes, reflejando de forma alegórica la historia de América Latina.',
+    categoria: 'conversatorio',
     cuposTotales: 80,
     cuposReservados: 65,
-    imagen: 's',
-    descripcion: 'Charla exclusiva con la autora sobre el proceso creativo tras su última novela negra bestseller. Firma de ejemplares al finalizar.'
+    imagen: '/imagenesL/cienaños.jpg',
+    descripcion: 'relata la saga de siete generaciones de la familia Buendía en el pueblo de Macondo. A través del realismo mágico, la obra entrelaza la soledad, el amor, los conflictos políticos y el destino trágico de sus personajes, reflejando de forma alegórica la historia de América Latina.'
+
   },
   {
     id: 2,
@@ -82,8 +83,8 @@ const EVENTOS_INICIALES = [
   },
   {
     id: 5,
-    titulo: 'Encuentro con la Autora: "Cien Años de Soledad"',
-    autor: 'Gabriel García Márquez (Análisis)',
+    titulo: 'Encuentro con la Autora: Boulevard',
+    autor: 'Flor M. Salvador',
     libro: 'Cien Años de Soledad',
     fecha: '2026-11-02',
     horarios: ['18:00 HS', '20:00 HS'],
@@ -92,12 +93,12 @@ const EVENTOS_INICIALES = [
     categoria: 'Presentación',
     cuposTotales: 60,
     cuposReservados: 40,
-    imagen: 'https://images.unsplash.com/photo-1516979187457-637abb4f9353?auto=format&fit=crop&w=800&q=80',
+    imagen: '/imagenesL/boulevardL.jpg',
     descripcion: 'Análisis profundo del realismo mágico macondiano de la mano de académicos y críticos literarios invitados.'
   },
   {
     id: 6,
-    titulo: 'El Principito',
+    titulo: 'Club de Lectura:El Principito',
     autor: 'Antoine de Saint-Exupéry',
     libro: 'El Principito (Le Petit Prince)',
     fecha: '6 de abril de 1943',
@@ -112,7 +113,7 @@ const EVENTOS_INICIALES = [
   },
   {
     id: 7,
-    titulo: ' "Orgullo y Prejuicio" ',
+    titulo: ' Estreno: Orgullo y Prejuicio ',
     autor: 'Jane Austen (Reinterpretación)',
     libro: 'Orgullo y Prejuicio',
     fecha: '2026-11-15',
