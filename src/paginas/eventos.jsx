@@ -122,7 +122,7 @@ const EVENTOS_INICIALES = [
     categoria: 'estreno',
     cuposTotales: 100,
     cuposReservados: 52,
-    imagen: '/imagenesL/cap',
+    imagen: '/imagenesL/orgull',
     descripcion: 'Exploramos cómo las narrativas y la sátira social de Jane Austen siguen influyendo en las historias románticas contemporáneas.'
   }
 ];
