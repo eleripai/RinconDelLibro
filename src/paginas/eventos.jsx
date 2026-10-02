@@ -22,17 +22,17 @@ import {
 const EVENTOS_INICIALES = [
   {
     id: 1,
-    titulo: 'Presentación oficial: "Las Sombras del Silencio"',
-    autor: 'Laura Restrepo',
-    libro: 'Las Sombras del Silencio',
-    fecha: '2026-10-05',
+    titulo: 'Presentación oficial: "cien años"',
+    autor: 'Gabriel García Márquez',
+    libro: 'Cien años de soledad',
+    fecha: '30 de mayo de 1967',
     horarios: ['17:00 HS', '18:30 HS', '20:00 HS'],
     formato: 'Presencial',
     lugar: 'Librería Central - Salón Principal (Madrid)',
-    categoria: 'Presentación',
+    categoria: 'relata la saga de siete generaciones de la familia Buendía en el pueblo de Macondo. A través del realismo mágico, la obra entrelaza la soledad, el amor, los conflictos políticos y el destino trágico de sus personajes, reflejando de forma alegórica la historia de América Latina.',
     cuposTotales: 80,
     cuposReservados: 65,
-    imagen: 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&w=800&q=80',
+    imagen: 's',
     descripcion: 'Charla exclusiva con la autora sobre el proceso creativo tras su última novela negra bestseller. Firma de ejemplares al finalizar.'
   },
   {
@@ -97,18 +97,18 @@ const EVENTOS_INICIALES = [
   },
   {
     id: 6,
-    titulo: 'Noche Poética & Recital: "Veinte Poemas de Amor"',
-    autor: 'Pablo Neruda',
-    libro: 'Veinte Poemas de Amor y una Canción Desesperada',
-    fecha: '2026-11-10',
+    titulo: 'El Principito',
+    autor: 'Antoine de Saint-Exupéry',
+    libro: 'El Principito (Le Petit Prince)',
+    fecha: '6 de abril de 1943',
     horarios: ['20:00 HS', '21:30 HS'],
     formato: 'Presencial',
     lugar: 'Café Literario "El Desván" (Santiago)',
     categoria: 'Club de Lectura',
     cuposTotales: 40,
     cuposReservados: 15,
-    imagen: 'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=800&q=80',
-    descripcion: 'Una velada íntima de lectura pública de poesía acompañada de música en vivo y degustación de café de especialidad.'
+    imagen: '/imagenesL/principitoL.jpg',
+    descripcion: 'es una obra maestra de la literatura universal que, bajo la apariencia de un cuento infantil, aborda profundas reflexiones filosóficas sobre la naturaleza humana, el amor, la amistad, la soledad y el sentido de la vida.'
   },
   {
     id: 7,
@@ -122,7 +122,7 @@ const EVENTOS_INICIALES = [
     categoria: 'estreno',
     cuposTotales: 100,
     cuposReservados: 52,
-    imagen: '/imagenesL/orgull',
+    imagen: '/imagenesL/orgullo.png',
     descripcion: 'Exploramos cómo las narrativas y la sátira social de Jane Austen siguen influyendo en las historias románticas contemporáneas.'
   }
 ];
