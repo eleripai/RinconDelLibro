@@ -68,17 +68,17 @@ const EVENTOS_INICIALES = [
   },
   {
     id: 4,
-    titulo: 'Taller Intensivo: Worldbuilding en Fantasía',
-    autor: 'Javier Castillo',
+    titulo: 'Taller informativo: Piense y hágase rico',
+    autor: 'Napoleon Hill',
     libro: 'El Día que se Perdió la Cordura',
     fecha: '2026-10-25',
-    horarios: ['10:00 HS', '15:00 HS'],
+    horarios: ['22:00 HS', '19:00 HS'],
     formato: 'Virtual',
     lugar: 'Google Meet',
     categoria: 'Taller',
     cuposTotales: 25,
     cuposReservados: 25,
-    imagen: 'https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=800&q=80',
+    imagen: '/imagenesL/napoleon.jpg',
     descripcion: 'Aprende a estructurar la geografía, mitología, reglas de magia y tensión narrativa para tu propia novela.'
   },
   {
@@ -93,8 +93,8 @@ const EVENTOS_INICIALES = [
     categoria: 'Presentación',
     cuposTotales: 60,
     cuposReservados: 40,
-    imagen: '/imagenesL/boulevardL.jpg',
-    descripcion: 'Análisis profundo del realismo mágico macondiano de la mano de académicos y críticos literarios invitados.'
+    imagen: '/imagenesL/boulevard.jpg',
+    descripcion: 'narra la intensa e inolvidable historia de Luke Howland y Hasley Weigel, dos jóvenes con realidades opuestas que cruzan sus caminos en un boulevard metafórico de emociones, adicciones y superación personal. En esta actividad exploraremos los temas centrales de la obra —el duelo, la salud mental, el amor juvenil y el impacto de las decisiones emocionales— en un espacio interactivo de debate y reflexión compartida.'
   },
   {
     id: 6,
@@ -114,7 +114,7 @@ const EVENTOS_INICIALES = [
   {
     id: 7,
     titulo: ' Estreno: Orgullo y Prejuicio ',
-    autor: 'Jane Austen (Reinterpretación)',
+    autor: 'Jane Austen',
     libro: 'Orgullo y Prejuicio',
     fecha: '2026-11-15',
     horarios: ['11:00 HS', '16:00 HS', '18:00 HS'],
