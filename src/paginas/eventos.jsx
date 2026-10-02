@@ -18,7 +18,7 @@ import {
   Phone,
   Trash2
 } from 'lucide-react';
- import "../imagenes/orgulloyprejuicio.jpg" from "src/paginas/eventos.jsx"
+
 const EVENTOS_INICIALES = [
   {
     id: 1,
@@ -117,12 +117,12 @@ const EVENTOS_INICIALES = [
     libro: 'Orgullo y Prejuicio',
     fecha: '2026-11-15',
     horarios: ['11:00 HS', '16:00 HS', '18:00 HS'],
-    formato: 'Virtual',
+    formato: 'presencial',
     lugar: 'Microsoft Teams',
-    categoria: 'Taller',
+    categoria: 'estreno',
     cuposTotales: 100,
     cuposReservados: 52,
-    imagen: 'https://images.unsplash.com/photo-1524758631624-e2822fa3c933?auto=format&fit=crop&w=800&q=80',
+    imagen: '/imagenesL/cap',
     descripcion: 'Exploramos cómo las narrativas y la sátira social de Jane Austen siguen influyendo en las historias románticas contemporáneas.'
   }
 ];
