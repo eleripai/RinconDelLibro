@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import '../css/eventos.css';
+import { Link, useLocation } from "react-router-dom";
 import { 
   Search, 
   BookOpen, 
@@ -14,9 +15,10 @@ import {
   Clock,
   User,
   Mail,
-  Phone
+  Phone,
+  Trash2
 } from 'lucide-react';
-
+import orgulloyprejuicio from "../imagenes/orgulloyprejuicio.jpg";
 const EVENTOS_INICIALES = [
   {
     id: 1,
@@ -110,7 +112,7 @@ const EVENTOS_INICIALES = [
   },
   {
     id: 7,
-    titulo: 'Masterclass: "Orgullo y Prejuicio" en el Siglo XXI',
+    titulo: ' "Orgullo y Prejuicio" ',
     autor: 'Jane Austen (Reinterpretación)',
     libro: 'Orgullo y Prejuicio',
     fecha: '2026-11-15',
@@ -120,7 +122,7 @@ const EVENTOS_INICIALES = [
     categoria: 'Taller',
     cuposTotales: 100,
     cuposReservados: 52,
-    imagen: 'https://images.unsplash.com/photo-1474939557548-f842486be195?auto=format&fit=crop&w=800&q=80',
+    imagen: 'https',
     descripcion: 'Exploramos cómo las narrativas y la sátira social de Jane Austen siguen influyendo en las historias románticas contemporáneas.'
   }
 ];
@@ -136,6 +138,13 @@ export default function SeccionEventos() {
   const [horarioSeleccionado, setHorarioSeleccionado] = useState('');
   const [datosUsuario, setDatosUsuario] = useState({ nombre: '', email: '', telefono: '' });
   const [errorFormulario, setErrorFormulario] = useState('');
+  
+  // Estado para desplegar la lista de inscripciones en el header
+  const [verMisReservas, setVerMisReservas] = useState(false);
+
+  const location = useLocation();
+
+  const totalReservas = Object.keys(reservasConfirmadas).length;
 
   const eventosFiltrados = eventos.filter((ev) => {
     const coincideTexto = 
@@ -186,6 +195,9 @@ export default function SeccionEventos() {
       ...reservasConfirmadas,
       [eventoId]: {
         horario: horarioSeleccionado,
+        titulo: modalEvento.titulo,
+        fecha: modalEvento.fecha,
+        lugar: modalEvento.lugar,
         ...datosUsuario
       }
     });
@@ -208,25 +220,138 @@ export default function SeccionEventos() {
       ev.id === eventoId ? { ...ev, cuposReservados: ev.cuposReservados - 1 } : ev
     ));
 
-    cerrarModal();
+    if (modalEvento && modalEvento.id === eventoId) {
+      cerrarModal();
+    }
   };
 
   return (
-    <section className="eventos-section">
+    <section className="eventos-section" style={{ paddingTop: '80px' }}>
+      
+      {/* Header con menú desplegable de inscripciones */}
+      <header className="navbar navbar-expand-lg navbar-light bg-white border-bottom px-4 py-3 fixed-top top-0 start-0 w-100 shadow-sm z-3">
+        <div className="container-fluid d-flex justify-content-between align-items-center">
+          <div className="d-flex align-items-center gap-2">
+            <div>
+              <h2 className="h6 mb-0 fw-bold">Rincón del Libro</h2>
+            </div>
+          </div>
+
+          <nav className="d-none d-lg-flex gap-4">
+            <Link 
+              to="/" 
+              className={`text-dark text-decoration-none fw-semibold pb-1 ${location.pathname === '/' ? 'border-bottom border-2 border-dark font-bold' : ''}`}
+            >
+              Inicio
+            </Link>
+            <Link 
+              to="/libros" 
+              className={`text-dark text-decoration-none fw-semibold pb-1 ${location.pathname === '/libros' ? 'border-bottom border-2 border-dark font-bold' : ''}`}
+            >
+              Libros
+            </Link>
+            <Link 
+              to="/categorias" 
+              className={`text-dark text-decoration-none fw-semibold pb-1 ${location.pathname === '/categorias' ? 'border-bottom border-2 border-dark font-bold' : ''}`}
+            >
+              Categorías
+            </Link>
+            <Link 
+              to="/eventos" 
+              className={`text-dark text-decoration-none fw-semibold pb-1 ${location.pathname === '/eventos' ? 'border-bottom border-2 border-dark font-bold' : ''}`}
+            >
+              Eventos de la biblioteca
+            </Link>
+            <Link 
+              to="/club-lectura" 
+              className={`text-dark text-decoration-none fw-semibold pb-1 ${location.pathname === '/club-lectura' ? 'border-bottom border-2 border-dark font-bold' : ''}`}
+            >
+              Club de lectura
+            </Link>
+            <Link 
+              to="/nosotros" 
+              className={`text-dark text-decoration-none fw-semibold pb-1 ${location.pathname === '/nosotros' ? 'border-bottom border-2 border-dark font-bold' : ''}`}
+            >
+              Sobre nosotros
+            </Link>
+          </nav>
+
+          <div className="d-flex align-items-center gap-3">
+            <button className="btn btn-link text-dark p-0">
+              <Search size={20} />
+            </button>
+            <button className="btn btn-link text-dark p-0">
+              <User size={20} />
+            </button>
+
+            {/* Menú Desplegable de Eventos Inscritos */}
+            <div className="position-relative">
+              <button 
+                onClick={() => setVerMisReservas(!verMisReservas)} 
+                className="btn btn-link text-dark p-0 position-relative"
+                title="Mis eventos inscriptos"
+              >
+                <Ticket size={22} />
+                {totalReservas > 0 && (
+                  <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark">
+                    {totalReservas}
+                  </span>
+                )}
+              </button>
+
+              {/* Popover / Desplegable */}
+              {verMisReservas && (
+                <div 
+                  className="position-absolute end-0 mt-2 bg-white border rounded shadow-lg p-3" 
+                  style={{ width: '320px', zIndex: 1000 }}
+                >
+                  <div className="d-flex justify-content-between align-items-center mb-2 pb-2 border-bottom">
+                    <h6 className="mb-0 fw-bold" style={{ color: 'var(--c-bistre)' }}>Mis Eventos Reservados</h6>
+                    <button onClick={() => setVerMisReservas(false)} className="btn btn-sm btn-link text-secondary p-0">
+                      <X size={16} />
+                    </button>
+                  </div>
+
+                  {totalReservas === 0 ? (
+                    <p className="text-muted text-center my-3" style={{ fontSize: '0.85rem' }}>
+                      No te has inscripto a ningún evento todavía.
+                    </p>
+                  ) : (
+                    <div style={{ maxHeight: '250px', overflowY: 'auto' }}>
+                      {Object.entries(reservasConfirmadas).map(([id, res]) => (
+                        <div key={id} className="p-2 mb-2 rounded bg-light border d-flex justify-content-between align-items-start">
+                          <div>
+                            <p className="fw-bold mb-1" style={{ fontSize: '0.85rem', color: 'var(--c-bistre)' }}>
+                              {res.titulo}
+                            </p>
+                            <p className="text-muted mb-1" style={{ fontSize: '0.75rem' }}>
+                              📅 {res.fecha} | ⏰ {res.horario}
+                            </p>
+                            <span className="badge bg-secondary" style={{ fontSize: '0.65rem' }}>
+                              Inscripto: {res.nombre}
+                            </span>
+                          </div>
+                          <button 
+                            onClick={() => handleCancelarReserva(Number(id))}
+                            className="btn btn-link text-danger p-0 ms-2"
+                            title="Cancelar inscripción"
+                          >
+                            <Trash2 size={14} />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+
+          </div>
+        </div>
+      </header>
+
       <div className="eventos-container">
         
-        <header className="eventos-header">
-          <span className="badge-categoria">
-            Agenda Literaria
-          </span>
-          <h2 className="eventos-title">
-            Próximos Eventos & Encuentros
-          </h2>
-          <p className="eventos-subtitle">
-            Participa en presentaciones de libros, clubes de lectura y talleres con tus autores favoritos.
-          </p>
-        </header>
-
         <div className="filtros-bar">
           <div className="input-container">
             <Search className="input-icon" />
