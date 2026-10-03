@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom'; // Se agregó la importación de Link
 import '../css/Registro.css';
 import '../js/Registro.js';
 
@@ -26,9 +27,10 @@ export default function Registro() {
     <div className="split-screen">
       <div className="left-side">
         <div className="brand-overlay">
-          <a className="brand-logo" href="/">
+          {/* Reemplazado <a> por <Link> hacia el inicio */}
+          <Link className="brand-logo" to="/">
             HomeScape
-          </a>
+          </Link>
         </div>
         <img
           src="galeria/images.jfif"
@@ -41,10 +43,11 @@ export default function Registro() {
         <header className="form-header">
           <span className="brand-logo-mobile">HomeScape</span>
           <div className="nav-links">
-            <a href="/login">Iniciar sesión</a>
-            <a href="/register" className="active">
+            {/* Reemplazados enlaces <a> por <Link> */}
+            <Link to="/login">Iniciar sesión</Link>
+            <Link to="/registro" className="active">
               Regístrate
-            </a>
+            </Link>
           </div>
         </header>
 
@@ -95,9 +98,10 @@ export default function Registro() {
               <button type="button" className="btn-social">
                 Google
               </button>
-             <button type="button" className="btn-social">
+              <button type="button" className="btn-social">
                 Instagram
-              </button><button type="button" className="btn-social">
+              </button>
+              <button type="button" className="btn-social">
                 Facebook
               </button>
             </div>

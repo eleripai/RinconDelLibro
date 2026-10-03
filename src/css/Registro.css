@@ -31,12 +31,12 @@
   left: 0;
   width: 100%; 
   z-index: 10;
-  /* Usamos el azul hielo #C7E9F2 con opacidad para el fondo traslúcido */
-  background-color: rgba(199, 233, 242, 0.75); 
+  /* Fondo traslúcido utilizando #EDE383 */
+  background-color: rgba(237, 227, 131, 0.85); 
   padding: 24px 40px; 
   border-radius: 0; 
   backdrop-filter: blur(6px); 
-  box-shadow: 0 4px 20px rgba(3, 44, 96, 0.08); 
+  box-shadow: 0 4px 20px rgba(53, 25, 3, 0.1); 
   display: flex;
   align-items: center;
 }
@@ -44,14 +44,14 @@
 .brand-logo {
   font-size: 26px;
   font-weight: 700;
-  color: #032C60; /* Azul oscuro principal */
+  color: #365004; /* Verde oliva oscuro */
   letter-spacing: 0.5px;
   text-decoration: none;
 }
 
 .right-side {
   flex: 1;
-  background-color: #032C60; /* Fondo azul oscuro profundo */
+  background-color: #351903; /* Fondo marrón oscuro profundo */
   display: flex;
   flex-direction: column;
 }
@@ -67,20 +67,21 @@
   display: none;
   font-size: 24px;
   font-weight: bold;
-  color: #032C60;
+  color: #365004;
 }
 
 .nav-links a {
   text-decoration: none;
-  color: #C7E9F2; /* Texto claro para resaltar sobre el fondo oscuro */
+  color: #EDE383; /* Texto crema suave para resaltar sobre el fondo oscuro */
   font-size: 14px;
   margin-left: 20px;
-  opacity: 0.8;
-  transition: opacity 0.2s;
+  opacity: 0.85;
+  transition: opacity 0.2s, color 0.2s;
 }
 
 .nav-links a:hover, .nav-links a.active {
   opacity: 1;
+  color: #ffffff;
   font-weight: 700;
 }
 
@@ -98,18 +99,18 @@
   max-width: 440px;
   padding: 40px;
   border-radius: 24px;
-  box-shadow: 0 10px 30px rgba(3, 44, 96, 0.05); 
-  border: 1px solid #99BAD9; /* Borde azul claro */
+  box-shadow: 0 10px 30px rgba(53, 25, 3, 0.15); 
+  border: 1px solid rgba(141, 164, 50, 0.3); /* Borde verde oliva sutil */
 }
 
 .form-card h2 {
-  color: #032C60; /* Título en azul oscuro */
+  color: #351903; /* Título en marrón profundo */
   font-size: 26px;
   margin-bottom: 8px;
 }
 
 .subtitle {
-  color: #658CA9; /* Subtítulo en azul acero */
+  color: #8DA432; /* Subtítulo en verde oliva claro */
   font-size: 14px;
   margin-bottom: 32px;
 }
@@ -123,32 +124,33 @@
 .input-group label {
   font-size: 13px;
   font-weight: 600;
-  color: #032C60;
+  color: #365004; /* Verde oliva oscuro para las etiquetas */
   margin-bottom: 6px;
 }
 
 .input-group input {
   padding: 14px;
-  border: 1px solid #99BAD9;
+  border: 1px solid rgba(141, 164, 50, 0.4);
   border-radius: 12px;
   background-color: #ffffff;
-  color: #032C60;
+  color: #351903;
   font-size: 14px;
   outline: none;
-  transition: border-color 0.2s;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .input-group input:focus {
-  border-color: #015D8C; /* Foco con azul océano */
+  border-color: #925E06; /* Foco con marrón cálido */
+  box-shadow: 0 0 0 3px rgba(146, 94, 6, 0.15);
 }
 
 .btn-main {
   width: 100%;
   padding: 14px;
-  background-color: #015D8C; /* Botón principal azul océano */
+  background-color: #925E06; /* Botón principal marrón cálido */
   border: none;
   border-radius: 12px;
-  color: #ffffff; /* Texto blanco para excelente contraste */
+  color: #ffffff; /* Excelente contraste en blanco */
   font-weight: 600;
   font-size: 15px;
   cursor: pointer;
@@ -157,7 +159,7 @@
 }
 
 .btn-main:hover {
-  background-color: #032C60; /* Cambia a azul oscuro en el hover */
+  background-color: #351903; /* Oscurece al pasar el cursor */
 }
 
 .divider-container {
@@ -169,11 +171,11 @@
 .line {
   flex: 1;
   border: 0;
-  border-top: 1px solid #99BAD9;
+  border-top: 1px solid rgba(141, 164, 50, 0.3);
 }
 
 .divider-text {
-  color: #658CA9;
+  color: #8DA432;
   font-size: 12px;
   padding: 0 10px;
 }
@@ -187,17 +189,17 @@
 .btn-social {
   padding: 12px;
   background-color: #ffffff;
-  border: 1px solid #99BAD9;
+  border: 1px solid rgba(141, 164, 50, 0.4);
   border-radius: 12px;
   cursor: pointer;
   font-size: 13px;
-  color: #032C60;
+  color: #351903;
   transition: all 0.2s;
 }
 
 .btn-social:hover {
-  background-color: #C7E9F2; /* Ligero fondo azul hielo al pasar el mouse */
-  border-color: #015D8C;
+  background-color: #EDE383; /* Fondo crema claro al pasar el cursor */
+  border-color: #925E06;
 }
 
 @media (max-width: 768px) {
@@ -207,7 +209,7 @@
   
   .form-header {
     padding: 24px;
-    background-color: #ffffff; /* Evita que el header móvil quede flotando sin fondo */
+    background-color: #ffffff;
   }
 
   .brand-logo-mobile {

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom'; // <-- AGREGALO AQUÍ
 import '../css/principal.css';
 import '../js/principal.js';
 import principitoL from "../assets/imagenesL/principitoL.jpg";
@@ -131,15 +132,16 @@ export default function Principal() {
 
           <div className="d-flex align-items-center gap-3">
             <button className="btn btn-link text-dark p-0">Buscar</button>
-            <button link to="./Registro.jsx" className="btn btn-link text-dark p-0">Registro</button>
-            <div className="position-relative">
+<Link to="/registro" className="btn btn-link text-dark p-0 text-decoration-none">
+  Registro
+</Link>            <div className="position-relative">
               <button className="btn btn-link text-dark p-0">Carrito</button>
               <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark">2</span>
             </div>
           </div>
         </div>
       </header>
-
+      
       <section id="inicio" className="hero-section text-dark">
         <div className="hero-overlay"></div>
         <div className="container position-relative z-2 py-5">
