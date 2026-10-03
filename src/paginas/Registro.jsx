@@ -33,7 +33,7 @@ export default function Registro() {
           </Link>
         </div>
         <img
-          src="galeria/images.jfif"
+          src="https://img.magnific.com/foto-gratis/personas-alto-angulo-leyendo-juntas_23-2150062128.jpg?semt=ais_hybrid&w=740&q=80"
           alt="Alojamiento acogedor"
           className="bg-image"
         />
