@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import '../css/principal.css';
+import '../js/principal.js';
 import principitoL from "../assets/imagenesL/principitoL.jpg";
 import AnafrankL from "../assets/imagenesL/AnafrankL.jpg";
 import leonbrujaropero from "../assets/imagenesL/leonbrujaropero.jpg";
 import pinocho from "../assets/imagenesL/pinocho.jpg";
-import gatosguerreros from "../assets/imagenesL/gatosguerreros.jpg"
+import gatosguerreros from "../assets/imagenesL/gatosguerreros.jpg";
+import cruceL from "../assets/imagenesL/cruceL.jpg";
+import fondomenu from "../assets/imagenesL/fondomenu.jpg"
+
 export default function Principal() {
   const [searchTerm, setSearchTerm] = useState('');
   const [showScrollTop, setShowScrollTop] = useState(false);
@@ -12,17 +16,16 @@ export default function Principal() {
   const libros = [
     {
       id: 1,
-      titulo: 'pinocho',
-      autor: 'carlo collodi',
-      descripcion: 'Tras la dolorosa muerte de SusannaUn humilde carpintero llamado Geppetto fabrica un muñeco de madera al que llama Pinocho. Sorprendentemente, la marioneta cobra vida propia, pero resulta ser desobediente, caprichosa y propensta a meterse en problemas. Cada vez que dice una mentira, su nariz de madera crece. A lo largo de una serie de desatadas y a veces oscuras aventuras —en las que conoce a pícaros personajes como el Zorro y el Gato, se convierte en burro y termina sumergido en el mar—, Pinocho deberá aprender lecciones sobre el esfuerzo, la honestidad y la empatía para cumplir su mayor deseo: convertirse en un niño de verdad.',
+      titulo: 'Pinocho',
+      autor: 'Carlo Collodi',
+      descripcion: 'Un humilde carpintero llamado Geppetto fabrica un muñeco de madera que cobra vida. Tras meterse en constantes problemas y mentiras, deberá aprender sobre el esfuerzo y la honestidad para convertirse en un niño de verdad.',
       imagen: pinocho
     },
-
     {
       id: 2,
       titulo: 'Gatos Guerreros',
       autor: 'Erin Hunter',
-      descripcion: 'Los gatos guerreros narra la historia de cuatro clanes de felinos salvajes —el Clan del Trueno, el Clan del Río, el Clan del Viento y el Clan de la Sombra— que coexisten en un bosque guiados por sus propias leyes y un estricto código de honor.',
+      descripcion: 'Narra la historia de cuatro clanes de felinos salvajes que coexisten en un bosque guiados por sus propias leyes y un estricto código de honor.',
       imagen: gatosguerreros
     },
     {
@@ -35,26 +38,24 @@ export default function Principal() {
     {
       id: 4,
       titulo: 'Ana Frank',
-      autor: 'Ana frank',
-      descripcion: 'El diario de Ana Frank es el testimonio real de una niña judía de trece años que debe ocultarse junto a su familia y otras cuatro personas en un escondite secreto en Ámsterdam, con el fin de escapar de la persecución nazi durante la Segunda Guerra Mundial.',
+      autor: 'Ana Frank',
+      descripcion: 'El diario de Ana Frank es el testimonio real de una niña judía de trece años que debe ocultarse junto a su familia para escapar de la persecución nazi.',
       imagen: AnafrankL
     },
     {
       id: 5,
-      titulo: 'Cruce de caminosAutor',
-      Autor: 'Naira Gamboa',
-      Sinopsis: 'Es una novela de ficción psicológica y dramática centrada en las decisiones personales y los giros inesperados del destino. La historia explora cómo los caminos de distintas personas se entrelazan de manera inevitable cuando enfrentan pérdidas, dilemas morales o la búsqueda de su verdadera identidad. A través del encuentro de sus protagonistas en momentos cruciales de sus vidas, la trama reflexiona sobre las consecuencias de cada elección y cómo las conexiones humanas pueden cambiar el rumbo de nuestra existencia',
+      titulo: 'Cruce de caminos',
+      autor: 'Naira Gamboa',
+      descripcion: 'Novela de ficción psicológica centrada en las decisiones personales y cómo los caminos de distintas personas se entrelazan al enfrentar pérdidas o dilemas morales.',
       imagen: cruceL
     },
     {
+      id: 6,
       titulo: 'El león, la bruja y el ropero',
-      Autor: 'C. S. Lewis',
-      Sinopsis: 'Cuatro hermanos —Peter, Susan, Edmund y Lucy— son enviados a una antigua casa de campo para protegerse de los bombardeos durante la Segunda Guerra Mundial. Mientras exploran la mansión, Lucy descubre un ropero mágico que sirve como entrada a Narnia, un mundo paralelo habitado por criaturas parlantes y seres mitológicos. Narnia se encuentra sometida bajo un invierno eterno sin Navidad impuesto por la malvada Bruja Blanca. Con la ayuda del poderoso y sabio león Aslan, los cuatro niños lucharán para romper el hechizo de la Bruja y devolver la paz al reino.',
+      autor: 'C. S. Lewis',
+      descripcion: 'Cuatro hermanos descubren un ropero mágico que los lleva a Narnia, un mundo dominado por un invierno eterno. Junto a Aslan, lucharán para liberar el reino.',
       imagen: leonbrujaropero
-    },
-
-
-
+    }
   ];
 
   useEffect(() => {
@@ -68,6 +69,24 @@ export default function Principal() {
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+
+    const bookCards = document.querySelectorAll('.custom-book-card');
+    bookCards.forEach((card) => observer.observe(card));
+
+    return () => observer.disconnect();
   }, []);
 
   const scrollToTop = () => {
@@ -86,7 +105,7 @@ export default function Principal() {
     <div
       className="rincon-container"
       style={{
-        backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.85)), url('https://w0.peakpx.com/wallpaper/286/775/HD-wallpaper-library-architecture-house-cool-fun.jpg')`,
+        backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.0), rgba(255, 255, 255, 0.20)), url(${fondomenu})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
@@ -107,13 +126,12 @@ export default function Principal() {
             <a href="#libros" className="text-dark text-decoration-none fw-semibold">Libros</a>
             <a href="#categorias" className="text-dark text-decoration-none fw-semibold">Categorías</a>
             <a href="#sucursales" className="text-dark text-decoration-none fw-semibold">Eventos de la biblioteca</a>
-            <a href="#nuevos" className="text-dark text-decoration-none fw-semibold">Club de lectura</a>
             <a href="#nosotros" className="text-dark text-decoration-none fw-semibold">Sobre nosotros</a>
           </nav>
 
           <div className="d-flex align-items-center gap-3">
             <button className="btn btn-link text-dark p-0">Buscar</button>
-            <button className="btn btn-link text-dark p-0">Perfil</button>
+            <button link to="./Registro.jsx" className="btn btn-link text-dark p-0">Registro</button>
             <div className="position-relative">
               <button className="btn btn-link text-dark p-0">Carrito</button>
               <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark">2</span>
@@ -127,7 +145,6 @@ export default function Principal() {
         <div className="container position-relative z-2 py-5">
           <div className="row">
             <div className="col-lg-7">
-
               <form className="input-group mb-4" onSubmit={handleSearch} style={{ maxWidth: '450px' }}>
                 <input
                   type="text"
@@ -136,7 +153,6 @@ export default function Principal() {
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
-                <button className="btn btn-dark px-4 fw-semibold" type="submit">Buscar</button>
               </form>
 
               <span className="text-muted d-block mb-2">Te acompañamos con</span>
@@ -167,21 +183,28 @@ export default function Principal() {
         </div>
 
         <div className="row g-4 justify-content-center">
-          {libros.map((libro) => (
+          {libros.map((libro, index) => (
             <div key={libro.id} className="col-12 col-md-6 col-lg-4 d-flex justify-content-center">
-              <div className="card shadow-sm border-0 h-100" style={{ width: '18rem' }}>
+              <div 
+                className="card custom-book-card shadow-sm border-0 h-100" 
+                style={{ 
+                  width: '18rem',
+                  transitionDelay: `${(index % 3) * 0.15}s` // Retraso secuencial en cascada
+                }}
+              >
                 {libro.imagen && (
-                  <img
-                    src={libro.imagen}
-                    className="card-img-top"
-                    alt={libro.titulo}
-                    style={{ height: '260px', objectFit: 'cover' }}
-                  />
+                  <div className="card-img-container">
+                    <img
+                      src={libro.imagen}
+                      className="card-img-top book-image"
+                      alt={libro.titulo}
+                    />
+                  </div>
                 )}
 
                 <div className="card-body d-flex flex-column justify-content-between">
                   <div>
-                    <h5 className="card-title font-serif fw-bold">{libro.titulo}</h5>
+                    <h5 className="card-title font-serif fw-bold text-capitalize">{libro.titulo}</h5>
                     <h6 className="card-subtitle mb-2 text-muted fs-6">{libro.autor}</h6>
                     <p className="card-text text-secondary style-description" style={{ fontSize: '0.875rem' }}>
                       {libro.descripcion}

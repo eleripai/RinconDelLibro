@@ -1,15 +1,33 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap');
+
+:root {
+  --color-primary-dark: #351903;  
+  --color-warm-brown: #925E06;    
+  --color-olive-green: #8DA432;   
+  --color-deep-green: #365004;    
+  --color-cream-yellow: #EDE383;  
+  --color-bg-light: #f7f4ed;      
+  --color-border-soft: #d8ce9f;   
+}
+
 .font-serif {
   font-family: 'Playfair Display', Georgia, serif;
+  color: var(--color-primary-dark);
 }
 
 .rincon-container {
-  background-color: #f7f4ed;
+  background-color: var(--color-bg-light);
+  color: var(--color-primary-dark);
   min-height: 100vh;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: none !important;
 }
 
 .active-link {
-  border-bottom: 2px solid #b2935b;
+  border-bottom: 2px solid var(--color-olive-green);
+  color: var(--color-warm-brown);
   padding-bottom: 4px;
 }
 
@@ -31,15 +49,56 @@
   background-color: rgba(247, 244, 237, 0.88);
   z-index: 1;
 }
+
 .custom-book-card {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  background-color: #faf7f0 !important;
+  border: 1px solid var(--color-border-soft) !important;
+  border-radius: 8px;
   overflow: hidden;
-  background-color: #ffffff;
+  
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
 }
+
+.custom-book-card .card-title, 
+.custom-book-card h3,
+.custom-book-card h4 {
+  color: var(--color-warm-brown);
+}
+
+.custom-book-card.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 .custom-book-card:hover {
   transform: translateY(-8px);
-  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15) !important;
+  box-shadow: 0 12px 25px rgba(53, 25, 3, 0.15) !important;
+  border-color: var(--color-olive-green) !important;
 }
+
+.card-img-container {
+  background-color: var(--color-cream-yellow); 
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid var(--color-border-soft);
+}
+
+.book-image {
+  max-height: 190px !important;
+  width: auto !important;
+  object-fit: contain;
+  box-shadow: 0 4px 10px rgba(53, 25, 3, 0.15);
+  transition: transform 0.3s ease;
+}
+
+.custom-book-card:hover .book-image {
+  transform: scale(1.04);
+}
+
 .scroll-top-btn {
   width: 50px;
   height: 50px;
@@ -48,22 +107,24 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: opacity 0.3s ease, transform 0.2s ease;
+  background-color: var(--color-olive-green);
+  color: #ffffff;
+  border: none;
+  border-radius: 50%;
+  box-shadow: 0 4px 12px rgba(53, 25, 3, 0.2);
+  transition: opacity 0.3s ease, transform 0.2s ease, background-color 0.3s ease;
 }
+
 .scroll-top-btn:hover {
+  background-color: var(--color-deep-green);
+  color: #ffffff;
   transform: scale(1.1);
 }
+
 #root {
   max-width: 100% !important;
   width: 100% !important;
   margin: 0 !important;
   padding: 0 !important;
   text-align: left !important;
-}
-
-.rincon-container {
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  border: none !important;
 }
