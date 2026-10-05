@@ -17,12 +17,14 @@
   height: 100vh; 
   overflow: hidden; 
 }
-
 .bg-image {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  display: block;
+  object-fit: cover; /* ESTA ES LA PROPIEDAD CLAVE: la imagen cubre todo sin deformarse */
+  display: block; /* Elimina espacios extra sutiles */
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 .brand-overlay {

@@ -125,18 +125,16 @@ export default function Principal() {
           <nav className="d-none d-lg-flex gap-4">
             <a href="#inicio" className="text-dark text-decoration-none fw-semibold active-link">Inicio</a>
             <a href="#libros" className="text-dark text-decoration-none fw-semibold">Libros</a>
-            <a href="#categorias" className="text-dark text-decoration-none fw-semibold">Categorías</a>
-            <a href="#sucursales" className="text-dark text-decoration-none fw-semibold">Eventos de la biblioteca</a>
+            <a href="#sucursales" className="text-dark text-decoration-none fw-semibold">Eventos </a>
             <a href="#nosotros" className="text-dark text-decoration-none fw-semibold">Sobre nosotros</a>
           </nav>
 
           <div className="d-flex align-items-center gap-3">
             <button className="btn btn-link text-dark p-0">Buscar</button>
-<Link to="/registro" className="btn btn-link text-dark p-0 text-decoration-none">
-  Registro
-</Link>            <div className="position-relative">
-              <button className="btn btn-link text-dark p-0">Carrito</button>
-              <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark">2</span>
+            <a className='btn btn-outline-ivory' href='/src/paginas/Registro.jsx'>Registrarse</a>
+            <div className="position-relative">
+              <button className="btn btn-link text-dark p-0">🛒</button>
+              <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark">-</span>
             </div>
           </div>
         </div>

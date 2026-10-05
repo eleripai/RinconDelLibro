@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom'; // Se agregó la importación de Link
-import '../css/Registro.css';
-import '../js/Registro.js';
+import { Link } from 'react-router-dom';
+import '../css/Registro.css'; // Comparte la misma hoja de estilos
 
-export default function Registro() {
+export default function InicioSesion() {
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -19,17 +18,17 @@ export default function Registro() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Datos enviados:', formData);
-    // Aquí puedes agregar la lógica de autenticación o la llamada a la API
+    console.log('Iniciar sesión con:', formData);
+    // Lógica de autenticación o llamada a API
   };
 
   return (
     <div className="split-screen">
+      {/* SECCIÓN IZQUIERDA (IMAGEN) */}
       <div className="left-side">
         <div className="brand-overlay">
-          {/* Reemplazado <a> por <Link> hacia el inicio */}
           <Link className="brand-logo" to="/">
-            RinconcDel Libro
+            HomeScape
           </Link>
         </div>
         <img
@@ -39,13 +38,15 @@ export default function Registro() {
         />
       </div>
 
+      {/* SECCIÓN DERECHA (FORMULARIO) */}
       <div className="right-side">
         <header className="form-header">
-          <span className="brand-logo-mobile">Rincon Del Libro</span>
+          <span className="brand-logo-mobile">HomeScape</span>
           <div className="nav-links">
-            {/* Reemplazados enlaces <a> por <Link> */}
-            <Link to="/login">Iniciar sesión</Link>
-            <Link to="/registro" className="active">
+            <Link to="/login" className="active">
+              Iniciar sesión
+            </Link>
+            <Link to="/registro">
               Regístrate
             </Link>
           </div>
@@ -53,9 +54,9 @@ export default function Registro() {
 
         <div className="card-container">
           <div className="form-card">
-            <h2>Crear una cuenta</h2>
+            <h2>¡Hola de nuevo!</h2>
             <p className="subtitle">
-              Registrate para gestionar tus reservas de forma más fácil.
+              Ingresa tus datos para acceder a tu cuenta y gestionar tus reservas.
             </p>
 
             <form onSubmit={handleSubmit}>
@@ -78,19 +79,19 @@ export default function Registro() {
                   id="password"
                   value={formData.password}
                   onChange={handleChange}
-                  placeholder="Crea una contraseña"
+                  placeholder="Introduce tu contraseña"
                   required
                 />
               </div>
 
               <button type="submit" className="btn-main">
-                Continuar con e-mail
+                Iniciar sesión
               </button>
             </form>
 
             <div className="divider-container">
               <hr className="line" />
-              <span className="divider-text">o elige otra opción</span>
+              <span className="divider-text">o ingresa con</span>
               <hr className="line" />
             </div>
 
