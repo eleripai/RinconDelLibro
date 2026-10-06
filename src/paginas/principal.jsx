@@ -114,63 +114,61 @@ export default function Principal() {
         minHeight: '100vh'
       }}
     >
-      <header className="navbar navbar-expand-lg navbar-light bg-white border-bottom px-4 py-3 sticky-top shadow-sm">
-        <div className="container-fluid d-flex justify-content-between align-items-center">
-          <div className="d-flex align-items-center gap-2">
+      <header className="encabezado-prin">
+        <div className= "encabezado-contenedor" >
+          <div className="encabezado-logo">
             <div>
               <h2 className="h6 mb-0 fw-bold">Rincón del Libro</h2>
             </div>
           </div>
 
-          <nav className="d-none d-lg-flex gap-4">
-            <a href="#inicio" className="text-dark text-decoration-none fw-semibold active-link">Inicio</a>
-            <a href="#libros" className="text-dark text-decoration-none fw-semibold">Libros</a>
-            <a href="#sucursales" className="text-dark text-decoration-none fw-semibold">Eventos </a>
-            <a href="#nosotros" className="text-dark text-decoration-none fw-semibold">Sobre nosotros</a>
+          <nav className="menu-nagacion">
+            <a href="#inicio" className="enlace-nav acitve-link">Inicio</a>
+            <a href="#libros" className="enlace-nav">Libros</a>
+            <a href="#eventos" className ="enlace-nav">Eventos</a>                 
+            <a href="#nosotros" className ="enlace-nav">"Sobre nosotros</a>
           </nav>
 
-          <div className="d-flex align-items-center gap-3">
-            <button className="btn btn-link text-dark p-0">Buscar</button>
-            <a className='btn btn-outline-ivory' href='/src/paginas/Registro.jsx'>Registrarse</a>
-            <div className="position-relative">
-              <button className="btn btn-link text-dark p-0">🛒</button>
-              <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark">-</span>
+          <div className="seccion-usuario-header">
+            <button className="boton-buscar-header">Buscar</button>
+            <Link className="boton-registro-header" to="/registro">Registrarse</Link>
+            <div className="contenedor-carrito">
+              <button className="boton-carrito">🛒</button>
+              <span className="insignia-carrito">-</span>
             </div>
           </div>
         </div>
       </header>
       
-      <section id="inicio" className="hero-section text-dark">
+      <section id="inicio" className="seccion-hero">
         <div className="hero-overlay"></div>
-        <div className="container position-relative z-2 py-5">
-          <div className="row">
-            <div className="col-lg-7">
-              <form className="input-group mb-4" onSubmit={handleSearch} style={{ maxWidth: '450px' }}>
-                <input
-                  type="text"
-                  className="form-control py-2 fs-6"
-                  placeholder="¿Qué libro buscas?"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-              </form>
+        <div className="hero-contenido">
+          <div className="hero-columna">
+            <form className="formulario-busqueda-hero" onSubmit={handleSearch}>
+              <input
+                type="text"
+                className="campo-busqueda-hero"
+                placeholder="¿Qué libro buscas?"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </form>
 
-              <span className="text-muted d-block mb-2">Te acompañamos con</span>
-              <h1 className="display-3 fw-bold mb-3 font-serif">
-                Libros para<br />
-                cada momento y<br />
-                lugar.
-              </h1>
-              <p className="lead mb-4 text-secondary">
-                Tu libro favorito <br />
-                ahora desde cualquier formato digital
-              </p>
+            <span className="hero-subtitulo">Te acompañamos con</span>
+            <h1 className="hero-titulo font-serif">
+              Libros para<br />
+              cada momento y<br />
+              lugar.
+            </h1>
+            <p className="hero-descripcion">
+              Tu libro favorito <br />
+              ahora desde cualquier formato digital
+            </p>
 
-              <div className="d-flex gap-3 mb-5">
-                <button className="btn btn-dark px-4 py-2 text-uppercase fw-semibold" style={{ fontSize: '0.8rem', letterSpacing: '1px' }}>
-                  COMPRAR &rarr;
-                </button>
-              </div>
+            <div className="hero-acciones">
+              <button className="boton-hero-comprar">
+                COMPRAR &rarr;
+              </button>
             </div>
           </div>
         </div>
@@ -182,35 +180,40 @@ export default function Principal() {
           <p className="text-muted">Desplaza hacia abajo para conocer los favoritos de los lectores</p>
         </div>
 
-        <div className="row g-4 justify-content-center">
+        <section id="libros" className="seccion-catalogo">
+        <div className="encabezado-catalogo">
+          <h2 className="titulo-catalogo font-serif">Los más comprados</h2>
+          <p className="subtitulo-catalogo">Desplaza hacia abajo para conocer los favoritos de los lectores</p>
+        </div>
+
+        <div className="grilla-libros">
           {libros.map((libro, index) => (
-            <div key={libro.id} className="col-12 col-md-6 col-lg-4 d-flex justify-content-center">
+            <div key={libro.id} className="columna-tarjeta">
               <div 
-                className="card custom-book-card shadow-sm border-0 h-100" 
+                className="tarjeta-libro custom-book-card" 
                 style={{ 
-                  width: '18rem',
-                  transitionDelay: `${(index % 3) * 0.15}s` // Retraso secuencial en cascada
+                  transitionDelay: `${(index % 3) * 0.15}s`
                 }}
               >
                 {libro.imagen && (
                   <div className="card-img-container">
                     <img
                       src={libro.imagen}
-                      className="card-img-top book-image"
+                      className="book-image"
                       alt={libro.titulo}
                     />
                   </div>
                 )}
 
-                <div className="card-body d-flex flex-column justify-content-between">
-                  <div>
-                    <h5 className="card-title font-serif fw-bold text-capitalize">{libro.titulo}</h5>
-                    <h6 className="card-subtitle mb-2 text-muted fs-6">{libro.autor}</h6>
-                    <p className="card-text text-secondary style-description" style={{ fontSize: '0.875rem' }}>
+                <div className="cuerpo-tarjeta">
+                  <div className="detalles-libro">
+                    <h5 className="titulo-libro font-serif">{libro.titulo}</h5>
+                    <h6 className="autor-libro">{libro.autor}</h6>
+                    <p className="descripcion-libro">
                       {libro.descripcion}
                     </p>
                   </div>
-                  <a href="#comprar" className="btn btn-dark w-100 mt-3 fw-semibold">Ver Libro</a>
+                  <a href="#comprar" className="boton-ver-libro">Ver Libro</a>
                 </div>
               </div>
             </div>
@@ -218,15 +221,14 @@ export default function Principal() {
         </div>
       </section>
 
+      {/* BOTÓN VOLVER ARRIBA */}
       {showScrollTop && (
         <button
           onClick={scrollToTop}
-          className="btn btn-dark rounded-circle scroll-top-btn shadow-lg position-fixed bottom-0 end-0 m-4"
+          className="scroll-top-btn"
           aria-label="Volver arriba"
         >
           ↑
         </button>
       )}
     </div>
-  );
-}
