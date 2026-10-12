@@ -48,7 +48,7 @@ const EVENTOS_INICIALES = [
     categoria: 'Club de Lectura',
     cuposTotales: 30,
     cuposReservados: 28,
-    imagen: '/imagenesl/casa',
+    imagen: '/imagenesl/terror.jpg',
     descripcion: 'una casa inquietante que esconde secretos perturbadores. A medida que se revelan los misterios del lugar, los protagonistas se enfrentan a fenómenos inexplicables y situaciones aterradoras que los llevan al límite entre la realidad y lo sobrenatural.'
   },
   {
