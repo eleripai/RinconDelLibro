@@ -45,7 +45,7 @@ const EVENTOS_INICIALES = [
     horarios: ['18:00 HS', '19:30 HS'],
     formato: 'Virtual',
     lugar: 'Zoom (Enlace enviado tras confirmar)',
-    categoria: 'Club de Lectura',
+    categoria: 'terror',
     cuposTotales: 30,
     cuposReservados: 28,
     imagen: '/imagenesl/terror.jpg',
