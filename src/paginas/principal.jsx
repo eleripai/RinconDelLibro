@@ -126,7 +126,7 @@ export default function Principal() {
 
           <nav className="menu-nagacion">
             <a href="/Principal" className="enlace-nav acitve-link">Inicio</a>
-            <a href="#libros" className="enlace-nav">Libros</a>
+            <a href="/libros" className="enlace-nav">Libros</a>
             <a href="/eventos" className ="enlace-nav">Eventos</a>                 
             <a href="/sobreNosotros" className ="enlace-nav">Sobre nosotros</a>
            </nav>
