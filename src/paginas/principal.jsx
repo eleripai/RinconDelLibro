@@ -125,14 +125,13 @@ export default function Principal() {
           </div>
 
           <nav className="menu-nagacion">
-            <a href="#inicio" className="enlace-nav acitve-link">Inicio</a>
+            <a href="/Principal" className="enlace-nav acitve-link">Inicio</a>
             <a href="#libros" className="enlace-nav">Libros</a>
             <a href="/eventos" className ="enlace-nav">Eventos</a>                 
-            <a href="#nosotros" className ="enlace-nav">"Sobre nosotros</a>
+            <a href="#nosotros" className ="enlace-nav">Sobre nosotros</a>
            </nav>
 
           <div className="seccion-usuario-header">
-            <button className="boton-buscar-header">Buscar</button>
             <Link className="boton-registro-header" to="/registro">Registrarse</Link>
             <div className="contenedor-carrito">
               <button className="boton-carrito">🛒</button>
