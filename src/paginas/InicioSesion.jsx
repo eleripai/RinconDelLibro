@@ -28,7 +28,7 @@ export default function InicioSesion() {
       <div className="left-side">
         <div className="brand-overlay">
           <Link className="brand-logo" to="/">
-            HomeScape
+            RinconDelLibro
           </Link>
         </div>
         <img
