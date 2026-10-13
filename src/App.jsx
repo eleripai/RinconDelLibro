@@ -5,6 +5,7 @@ import Registro from './paginas/Registro.jsx';
 import InicioSesion from './paginas/InicioSesion.jsx'; 
 import Eventos from './paginas/eventos.jsx';
 import Nosotros from './paginas/sobreNosotros.jsx';
+import libros from './paginas/libros.jsx';
 
 export default function App() {
   return (
@@ -14,6 +15,7 @@ export default function App() {
       <Route path="/login" element={<InicioSesion />} /> 
         <Route path="/eventos" element={<Eventos />} />
         <Route path="/nosotros" element={<Nosotros />} />
+        <Route path="/libros" element={<libros/>}/>
         
       </Routes>
   );
