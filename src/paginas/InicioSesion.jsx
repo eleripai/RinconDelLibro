@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import '../css/Registro.css'; // Comparte la misma hoja de estilos
+import '../css/Registro.css'; 
 
 export default function InicioSesion() {
   const [formData, setFormData] = useState({
