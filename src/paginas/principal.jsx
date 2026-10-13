@@ -28,6 +28,8 @@ export default function Principal() {
       autor: 'Erin Hunter',
       descripcion: 'Narra la historia de cuatro clanes de felinos salvajes que coexisten en un bosque guiados por sus propias leyes y un estricto código de honor.',
       imagen: gatosguerreros
+
+     
     },
     {
       id: 3,
@@ -125,9 +127,9 @@ export default function Principal() {
           <nav className="menu-nagacion">
             <a href="#inicio" className="enlace-nav acitve-link">Inicio</a>
             <a href="#libros" className="enlace-nav">Libros</a>
-            <a href="#eventos" className ="enlace-nav">Eventos</a>                 
+            <a href="/eventos" className ="enlace-nav">Eventos</a>                 
             <a href="#nosotros" className ="enlace-nav">"Sobre nosotros</a>
-          </nav>
+           </nav>
 
           <div className="seccion-usuario-header">
             <button className="boton-buscar-header">Buscar</button>
@@ -174,11 +176,7 @@ export default function Principal() {
         </div>
       </section>
 
-      <section id="libros" className="container py-5">
-        <div className="text-center mb-5">
-          <h2 className="font-serif display-6 fw-bold">Los más comprados</h2>
-          <p className="text-muted">Desplaza hacia abajo para conocer los favoritos de los lectores</p>
-        </div>
+     
 
         <section id="libros" className="seccion-catalogo">
         <div className="encabezado-catalogo">
