@@ -1,10 +1,10 @@
 import React from 'react';
-import Principal from './paginas/principal.jsx';
+import SobreNosotros from './paginas/sobreNosotros.jsx';
 
 export default function App() {
   return (
     <div>
-      <Principal />
+      <SobreNosotros />
     </div>
   );
 }
