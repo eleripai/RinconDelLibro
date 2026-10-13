@@ -5,6 +5,7 @@ import Registro from './paginas/Registro.jsx';
 import InicioSesion from './paginas/InicioSesion.jsx'; 
 import Eventos from './paginas/eventos.jsx';
 import Nosotros from './paginas/sobreNosotros.jsx';
+import SobreNosotros from './paginas/sobreNosotros.jsx';
 
 export default function App() {
   return (
