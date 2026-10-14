@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom'; // <-- AGREGALO AQUÍ
+import { Link } from 'react-router-dom'; // <-- Asegúrate de tener esto importado
 import '../css/principal.css';
 import '../js/principal.js';
 import principitoL from "../assets/imagenesL/principitoL.jpg";
@@ -124,12 +124,12 @@ export default function Principal() {
             </div>
           </div>
 
-          <nav className="menu-nagacion">
-            <a href="/Principal" className="enlace-nav acitve-link">Inicio</a>
-            <a href="#libros" className="enlace-nav">Libros</a>
-            <a href="/eventos" className ="enlace-nav">Eventos</a>                 
-            <a href="/sobreNosotros" className ="enlace-nav">Sobre nosotros</a>
-           </nav>
+        <nav className="menu-nagacion">
+            <Link to="/" className="enlace-nav acitve-link">Inicio</Link>
+            <Link to="/libros" className="enlace-nav">Libros</Link>
+            <Link to="/eventos" className="enlace-nav">Eventos</Link>            
+            <Link to="/nosotros" className="enlace-nav">Sobre nosotros</Link>
+          </nav>
 
           <div className="seccion-usuario-header">
             <Link className="boton-registro-header" to="/registro">Registrarse</Link>

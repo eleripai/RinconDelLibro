@@ -235,7 +235,6 @@
   background-color: var(--color-warm-brown);
 }
 
-/* SECCIÓN CATÁLOGO Y TARJETAS */
 .seccion-catalogo {
   max-width: 1200px;
   margin: 0 auto;
@@ -251,10 +250,11 @@
   font-size: 2rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
+  color: #000;
 }
 
 .subtitulo-catalogo {
-  color: #6c757d;
+  color: #000;
   margin: 0;
 }
 
