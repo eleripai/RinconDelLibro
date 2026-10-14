@@ -1,0 +1,231 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.split-screen {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+}
+
+.left-side {
+  flex: 1;
+  position: relative;
+  height: 100vh; 
+  overflow: hidden; 
+}
+.bg-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* ESTA ES LA PROPIEDAD CLAVE: la imagen cubre todo sin deformarse */
+  display: block; /* Elimina espacios extra sutiles */
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.brand-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%; 
+  z-index: 10;
+  /* Fondo traslúcido utilizando #EDE383 */
+  background-color: rgba(237, 227, 131, 0.85); 
+  padding: 24px 40px; 
+  border-radius: 0; 
+  backdrop-filter: blur(6px); 
+  box-shadow: 0 4px 20px rgba(53, 25, 3, 0.1); 
+  display: flex;
+  align-items: center;
+}
+
+.brand-logo {
+  font-size: 26px;
+  font-weight: 700;
+  color: #365004; /* Verde oliva oscuro */
+  letter-spacing: 0.5px;
+  text-decoration: none;
+}
+
+.right-side {
+  flex: 1;
+  background-color: #351903; /* Fondo marrón oscuro profundo */
+  display: flex;
+  flex-direction: column;
+}
+
+.form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 40px 60px 20px 60px;
+}
+
+.brand-logo-mobile {
+  display: none;
+  font-size: 24px;
+  font-weight: bold;
+  color: #365004;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #EDE383; /* Texto crema suave para resaltar sobre el fondo oscuro */
+  font-size: 14px;
+  margin-left: 20px;
+  opacity: 0.85;
+  transition: opacity 0.2s, color 0.2s;
+}
+
+.nav-links a:hover, .nav-links a.active {
+  opacity: 1;
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.card-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 40px 60px 40px;
+}
+
+.form-card {
+  background-color: #ffffff;
+  width: 100%;
+  max-width: 440px;
+  padding: 40px;
+  border-radius: 24px;
+  box-shadow: 0 10px 30px rgba(53, 25, 3, 0.15); 
+  border: 1px solid rgba(141, 164, 50, 0.3); /* Borde verde oliva sutil */
+}
+
+.form-card h2 {
+  color: #351903; /* Título en marrón profundo */
+  font-size: 26px;
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  color: #8DA432; /* Subtítulo en verde oliva claro */
+  font-size: 14px;
+  margin-bottom: 32px;
+}
+
+.input-group {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.input-group label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #365004; /* Verde oliva oscuro para las etiquetas */
+  margin-bottom: 6px;
+}
+
+.input-group input {
+  padding: 14px;
+  border: 1px solid rgba(141, 164, 50, 0.4);
+  border-radius: 12px;
+  background-color: #ffffff;
+  color: #351903;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.input-group input:focus {
+  border-color: #925E06; /* Foco con marrón cálido */
+  box-shadow: 0 0 0 3px rgba(146, 94, 6, 0.15);
+}
+
+.btn-main {
+  width: 100%;
+  padding: 14px;
+  background-color: #925E06; /* Botón principal marrón cálido */
+  border: none;
+  border-radius: 12px;
+  color: #ffffff; /* Excelente contraste en blanco */
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-top: 10px;
+}
+
+.btn-main:hover {
+  background-color: #351903; /* Oscurece al pasar el cursor */
+}
+
+.divider-container {
+  display: flex;
+  align-items: center;
+  margin: 24px 0;
+}
+
+.line {
+  flex: 1;
+  border: 0;
+  border-top: 1px solid rgba(141, 164, 50, 0.3);
+}
+
+.divider-text {
+  color: #8DA432;
+  font-size: 12px;
+  padding: 0 10px;
+}
+
+.social-buttons {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.btn-social {
+  padding: 12px;
+  background-color: #ffffff;
+  border: 1px solid rgba(141, 164, 50, 0.4);
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 13px;
+  color: #351903;
+  transition: all 0.2s;
+}
+
+.btn-social:hover {
+  background-color: #EDE383; /* Fondo crema claro al pasar el cursor */
+  border-color: #925E06;
+}
+
+@media (max-width: 768px) {
+  .left-side {
+    display: none; 
+  }
+  
+  .form-header {
+    padding: 24px;
+    background-color: #ffffff;
+  }
+
+  .brand-logo-mobile {
+    display: block;
+  }
+
+  .card-container {
+    padding: 10px 20px 40px 20px;
+    background-color: #ffffff;
+  }
+
+  .form-card {
+    padding: 24px;
+    box-shadow: none;
+    border: none;
+  }
+}

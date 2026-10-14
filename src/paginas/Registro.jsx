@@ -1,0 +1,113 @@
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom'; // Se agregó la importación de Link
+import '../css/Registro.css';
+import '../js/Registro.js';
+
+export default function Registro() {
+  const [formData, setFormData] = useState({
+    email: '',
+    password: ''
+  });
+
+  const handleChange = (e) => {
+    const { id, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [id]: value
+    }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log('Datos enviados:', formData);
+    // Aquí puedes agregar la lógica de autenticación o la llamada a la API
+  };
+
+  return (
+    <div className="split-screen">
+      <div className="left-side">
+        <div className="brand-overlay">
+          {/* Reemplazado <a> por <Link> hacia el inicio */}
+          <Link className="brand-logo" to="/">
+            RinconcDel Libro
+          </Link>
+        </div>
+        <img
+          src="https://img.magnific.com/foto-gratis/personas-alto-angulo-leyendo-juntas_23-2150062128.jpg?semt=ais_hybrid&w=740&q=80"
+          alt="Alojamiento acogedor"
+          className="bg-image"
+        />
+      </div>
+
+      <div className="right-side">
+        <header className="form-header">
+          <span className="brand-logo-mobile">Rincon Del Libro</span>
+          <div className="nav-links">
+            {/* Reemplazados enlaces <a> por <Link> */}
+            <Link to="/login">Iniciar sesión</Link>
+            <Link to="/registro" className="active">
+              Regístrate
+            </Link>
+          </div>
+        </header>
+
+        <div className="card-container">
+          <div className="form-card">
+            <h2>Crear una cuenta</h2>
+            <p className="subtitle">
+              Registrate para gestionar tus reservas de forma más fácil.
+            </p>
+
+            <form onSubmit={handleSubmit}>
+              <div className="input-group">
+                <label htmlFor="email">Dirección de e-mail</label>
+                <input
+                  type="email"
+                  id="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  placeholder="Introduce tu e-mail"
+                  required
+                />
+              </div>
+
+              <div className="input-group">
+                <label htmlFor="password">Contraseña</label>
+                <input
+                  type="password"
+                  id="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  placeholder="Crea una contraseña"
+                  required
+                />
+              </div>
+
+              <button type="submit" className="btn-main">
+                Continuar con e-mail
+              </button>
+            </form>
+
+            <div className="divider-container">
+              <hr className="line" />
+              <span className="divider-text">o elige otra opción</span>
+              <hr className="line" />
+            </div>
+
+            <div className="social-buttons">
+              <button type="button" className="btn-social">
+                Google
+              </button>
+              <button type="button" className="btn-social">
+                Instagram
+              </button>
+              <button type="button" className="btn-social">
+                Facebook
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

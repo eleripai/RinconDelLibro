@@ -1,5 +1,11 @@
 import React from 'react';
+<<<<<<< HEAD
 import '../css/sobreNosotros.css';import { 
+=======
+import { Link } from 'react-router-dom';
+import '../css/sobreNosotros.css';
+import { 
+>>>>>>> b096d313c93d5bf8e8862d5245584df3a38fa6c9
   FaBook, 
   FaMapMarkerAlt, 
   FaClock, 
@@ -10,11 +16,15 @@ import '../css/sobreNosotros.css';import {
   FaTwitter, 
   FaSearch 
 } from 'react-icons/fa';
+<<<<<<< HEAD
 
+=======
+>>>>>>> b096d313c93d5bf8e8862d5245584df3a38fa6c9
 export default function SobreNosotros() {
   return (
     <div className="sobre-nosotros-container">
       {/* HEADER / NAVEGACIÓN */}
+<<<<<<< HEAD
       <header className="site-header">
         <div className="logo-area">
           <div className="logo-icon"><FaBook /></div>
@@ -35,6 +45,31 @@ export default function SobreNosotros() {
           <button className="search-btn"><FaSearch /></button>
           <button className="club-btn">CLUB DE LECTURA</button>
         </div>
+=======
+    <header className="encabezado-prin">
+  <div className="encabezado-contenedor">
+    <div className="encabezado-logo">
+      <div>
+        <h2 className="h6 mb-0 fw-bold">Rincón del Libro</h2>
+      </div>
+    </div>
+
+    <nav className="menu-nagacion">
+      <a href="/Principal" className="enlace-nav acitve-link">Inicio</a>
+      <a href="#libros" className="enlace-nav">Libros</a>
+      <a href="/eventos" className="enlace-nav">Eventos</a>                 
+      <a href="#nosotros" className="enlace-nav">Sobre nosotros</a>
+    </nav>
+
+    <div className="seccion-usuario-header">
+            <Link className="boton-registro-header" to="/registro">Registrarse</Link>
+            <div className="contenedor-carrito">
+              <button className="boton-carrito">🛒</button>
+              <span className="insignia-carrito">-</span>
+            </div>
+          </div>
+        </div>
+>>>>>>> b096d313c93d5bf8e8862d5245584df3a38fa6c9
       </header>
 
       {/* CONTENIDO PRINCIPAL */}
