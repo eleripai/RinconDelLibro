@@ -421,3 +421,519 @@ body {
 .footer-links a:hover {
   color: #FFF;
 }
+
+
+html, body {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: #FDFBF7;
+}
+
+html, body, #root {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  box-sizing: border-box;
+}
+
+
+
+/* Estilos Generales */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: #FDFBF7;
+  color: #2C2A29;
+  font-family: 'Georgia', serif;
+}
+
+.sobre-nosotros-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Header */
+.site-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 60px;
+  background-color: #FDFBF7;
+  border-bottom: 1px solid #EFECE6;
+}
+
+.logo-area {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-icon {
+  background-color: #3B4424;
+  color: #FDFBF7;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+.logo-text h1 {
+  font-size: 20px;
+  font-weight: bold;
+  color: #2C2A29;
+}
+
+.logo-text span {
+  font-size: 9px;
+  letter-spacing: 1px;
+  color: #7A756D;
+}
+
+.main-nav {
+  display: flex;
+  gap: 30px;
+}
+
+.main-nav a {
+  text-decoration: none;
+  color: #4A453F;
+  font-size: 14px;
+  padding-bottom: 4px;
+}
+
+.main-nav a.active, .main-nav a:hover {
+  border-bottom: 2px solid #3B4424;
+  color: #2C2A29;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.search-btn {
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  color: #2C2A29;
+}
+
+.club-btn {
+  background-color: #3B4424;
+  color: #FDFBF7;
+  border: none;
+  padding: 10px 18px;
+  font-size: 11px;
+  font-weight: bold;
+  border-radius: 4px;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+}
+
+/* Main Content Layout */
+.main-content {
+  padding: 50px 60px;
+  flex: 1;
+}
+
+.content-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 40px;
+  align-items: start;
+}
+
+/* History & Sucursales Section */
+.history-section .subtitle-tag {
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  color: #8C7B5E;
+  font-weight: bold;
+}
+
+.history-section h2 {
+  font-size: 42px;
+  color: #333923;
+  margin: 10px 0 20px 0;
+  line-height: 1.1;
+  font-weight: normal;
+}
+
+.history-section > p {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #555048;
+  max-width: 650px;
+  margin-bottom: 40px;
+}
+
+.branches-container h3 {
+  font-size: 22px;
+  color: #333923;
+  margin-bottom: 20px;
+  font-weight: normal;
+}
+
+.branch-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.branch-card {
+  background-color: #FAF7F0;
+  border: 1px solid #EBE4D5;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.branch-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #333923;
+}
+
+.branch-title svg {
+  color: #A3703E;
+}
+
+.branch-title h4 {
+  font-size: 15px;
+}
+
+.branch-card p {
+  font-size: 13px;
+  color: #665E53;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.badge-tag {
+  margin-top: 10px;
+  background-color: #EFE4C7;
+  color: #594924;
+  font-size: 9px;
+  font-weight: bold;
+  padding: 5px 8px;
+  border-radius: 4px;
+  text-align: center;
+  letter-spacing: 0.5px;
+}
+
+/* Highlight Sidebar */
+.refugio-card {
+  background-color: #E2E8B9;
+  border-radius: 16px;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.card-top-icon {
+  background-color: #D3DB9E;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #384022;
+}
+
+.refugio-card h3 {
+  font-size: 24px;
+  color: #2C331B;
+  font-weight: normal;
+}
+
+.refugio-card p {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #424A30;
+}
+
+.card-badges-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 10px;
+  font-weight: bold;
+  color: #4B5237;
+  letter-spacing: 0.5px;
+}
+
+.card-footer-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-top: 1px solid #D3DB9E;
+  padding-top: 20px;
+  margin-top: 10px;
+}
+
+.circle-badge {
+  background-color: #384022;
+  color: #FFF;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.card-footer-info div {
+  display: flex;
+  flex-direction: column;
+}
+
+.card-footer-info strong {
+  font-size: 11px;
+  color: #384022;
+}
+
+.card-footer-info small {
+  font-size: 10px;
+  color: #555D3F;
+}
+
+/* Footer Styles */
+.site-footer {
+  background-color: #171412;
+  color: #C2BBB2;
+  padding: 60px 60px 20px 60px;
+  margin-top: auto;
+}
+
+.footer-content {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 40px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid #2B2623;
+}
+
+.footer-col h4 {
+  color: #FFF;
+  font-size: 15px;
+  margin-bottom: 20px;
+  font-weight: normal;
+}
+
+.footer-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.f-icon {
+  background-color: #D3DB9E;
+  color: #171412;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+}
+
+.footer-logo h3 {
+  color: #FFF;
+  font-size: 18px;
+}
+
+.brand-col p {
+  font-size: 13px;
+  line-height: 1.5;
+  color: #9E968D;
+  max-width: 300px;
+}
+
+.nav-col ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.nav-col a, .contact-col p, .social-col small {
+  color: #9E968D;
+  text-decoration: none;
+  font-size: 13px;
+}
+
+.nav-col a:hover {
+  color: #FFF;
+}
+
+.contact-col {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.contact-col p {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.social-icons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.social-icons a {
+  background-color: #2B2623;
+  color: #FFF;
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.social-icons a:hover {
+  background-color: #D3DB9E;
+  color: #171412;
+}
+
+.footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 20px;
+  font-size: 12px;
+  color: #7A726B;
+}
+
+.footer-links {
+  display: flex;
+  gap: 20px;
+}
+
+.footer-links a {
+  color: #7A726B;
+  text-decoration: none;
+}
+
+.footer-links a:hover {
+  color: #FFF;
+}
+
+
+
+
+/* Estilos definitivos para alinear el header correctamente */
+.encabezado-prin {
+  background-color: #8DA432;
+  border-bottom: 1px solid #E5E0D0;
+  width: 100%;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.encabezado-contenedor {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 1rem 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.encabezado-logo .fw-bold {
+  font-weight: 700;
+  color: #3A4D1A;
+  font-size: 1.2rem;
+  margin: 0;
+}
+
+.menu-nagacion {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+
+.enlace-nav {
+  text-decoration: none;
+  color: #554736;
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: color 0.2s;
+}
+
+.enlace-nav:hover, .acitve-link {
+  color: #3A4D1A;
+}
+
+.seccion-usuario-header {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.boton-registro-header {
+  background-color: #3A4D1A;
+  color: #EBE088;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  text-decoration: none;
+  font-size: 0.75rem;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.contenedor-carrito {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.boton-carrito {
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  cursor: pointer;
+}
+
+.insignia-carrito {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background-color: #3A4D1A;
+  color: white;
+  border-radius: 50%;
+  padding: 0.1rem 0.4rem;
+  font-size: 10px;
+  font-weight: bold;
+}

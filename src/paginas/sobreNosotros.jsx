@@ -1,5 +1,7 @@
 import React from 'react';
-import '../css/sobreNosotros.css';import { 
+import { Link } from 'react-router-dom';
+import '../css/sobreNosotros.css';
+import { 
   FaBook, 
   FaMapMarkerAlt, 
   FaClock, 
@@ -10,30 +12,32 @@ import '../css/sobreNosotros.css';import {
   FaTwitter, 
   FaSearch 
 } from 'react-icons/fa';
-
 export default function SobreNosotros() {
   return (
     <div className="sobre-nosotros-container">
       {/* HEADER / NAVEGACIÓN */}
-      <header className="site-header">
-        <div className="logo-area">
-          <div className="logo-icon"><FaBook /></div>
-          <div className="logo-text">
-            <h1>El Rincón del Libro</h1>
-            <span>LIBRERÍA & EDITORIAL</span>
+    <header className="encabezado-prin">
+  <div className="encabezado-contenedor">
+    <div className="encabezado-logo">
+      <div>
+        <h2 className="h6 mb-0 fw-bold">Rincón del Libro</h2>
+      </div>
+    </div>
+
+    <nav className="menu-nagacion">
+      <a href="/Principal" className="enlace-nav acitve-link">Inicio</a>
+      <a href="#libros" className="enlace-nav">Libros</a>
+      <a href="/eventos" className="enlace-nav">Eventos</a>                 
+      <a href="#nosotros" className="enlace-nav">Sobre nosotros</a>
+    </nav>
+
+    <div className="seccion-usuario-header">
+            <Link className="boton-registro-header" to="/registro">Registrarse</Link>
+            <div className="contenedor-carrito">
+              <button className="boton-carrito">🛒</button>
+              <span className="insignia-carrito">-</span>
+            </div>
           </div>
-        </div>
-
-        <nav className="main-nav">
-          <a href="#inicio">Inicio</a>
-          <a href="#catalogo">Catálogo</a>
-          <a href="#nosotros" className="active">Sobre Nosotros</a>
-          <a href="#sucursales">Club de lectura</a>
-        </nav>
-
-        <div className="header-actions">
-          <button className="search-btn"><FaSearch /></button>
-          <button className="club-btn">CLUB DE LECTURA</button>
         </div>
       </header>
 
