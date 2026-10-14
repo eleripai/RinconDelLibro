@@ -138,9 +138,7 @@ export default function Libros() {
 
   return (
     <div className="biblioteca-page">
-      <header className="library-nav"><Link to="/" className="brand">Rincón <span>del Libro</span></Link><nav><Link to="/">Inicio</Link><a className="active" href="#coleccion">Libros</a><a href="#categorias">Categorías</a><a href="#estadisticas">Nuestra colección</a></nav><div className="nav-tools"><button onClick={() => setSoloFavoritos(v => !v)} className={soloFavoritos ? 'tool active' : 'tool'}>♥ <span>Favoritos</span></button><button className="admin-toggle" onClick={() => setAdminOpen(v => !v)}>⚙ Administrar</button></div></header>
-
-      <main>
+<main>
         <section className="library-hero">
           <div className="hero-copy"><span className="library-eyebrow">NUESTRA COLECCIÓN · {stats.total} LIBROS</span><h1>Una biblioteca<br /><em>llena de historias.</em></h1><p>Explorá, filtrá y descubrí tu próxima lectura. Guardá favoritos y armá tu propia lista.</p><div className="hero-mini-stats"><span><b>{stats.disponibles}</b> disponibles</span><span><b>{stats.categorias}</b> categorías</span><span><b>{stats.favoritos}</b> favoritos</span></div></div><div className="hero-stack"><div className="stack-card one">✦</div><div className="stack-card two">LIBROS</div><div className="stack-card three">RDL</div></div>
         </section>
@@ -161,8 +159,7 @@ export default function Libros() {
 
         <section id="estadisticas" className="stats-section"><div><span>LA BIBLIOTECA EN NÚMEROS</span><h2>Hay una historia esperando por vos.</h2></div><div className="stats-grid"><div><strong>{stats.total}</strong><span>Libros</span></div><div><strong>{stats.disponibles}</strong><span>Disponibles</span></div><div><strong>{stats.categorias}</strong><span>Categorías</span></div><div><strong>{stats.favoritos}</strong><span>Favoritos</span></div></div></section>
       </main>
-      <footer className="library-footer"><Link to="/">← Volver al inicio</Link><span>Rincón del Libro · Biblioteca digital</span><button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>Volver arriba ↑</button></footer>
-      {showTop && <button className="floating-top" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>↑</button>}
+{showTop && <button className="floating-top" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>↑</button>}
       {seleccionado && <BookModal libro={seleccionado} favorito={favoritos.includes(seleccionado.id)} enLectura={lectura.includes(seleccionado.id)} onClose={() => setSeleccionado(null)} onFavorite={() => { toggleFavorite(seleccionado.id); setToast(favoritos.includes(seleccionado.id) ? 'Quitado de favoritos' : '♥ Agregado a favoritos'); }} onReading={() => { toggleReading(seleccionado.id); setToast(lectura.includes(seleccionado.id) ? 'Quitado de tu lista' : '✓ Agregado a tu lista de lectura'); }} />}
       {toast && <div className="toast">{toast}</div>}
     </div>

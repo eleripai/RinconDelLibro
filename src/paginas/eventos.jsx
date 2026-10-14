@@ -1,6 +1,13 @@
 import React, { useState } from 'react';
 import '../css/eventos.css';
-import { Link, useLocation } from "react-router-dom";
+import imagenCienAnos from '../assets/imagenesL/cien-anos.jpg';
+import imagenTerror from '../assets/imagenesL/terror.jpg';
+import imagenLaVida from '../assets/imagenesL/lavida.jpg';
+import imagenPiense from '../assets/imagenesL/piense.jpg';
+import imagenBoulevard from '../assets/imagenesL/boulevard.jpg';
+import imagenPrincipito from '../assets/imagenesL/principitoL.jpg';
+import imagenOrgullo from '../assets/imagenesL/orgullo.png';
+import { Link } from "react-router-dom";
 import { 
   Search, 
   BookOpen, 
@@ -32,7 +39,7 @@ const EVENTOS_INICIALES = [
     categoria: 'Ficción literaria',
     cuposTotales: 80,
     cuposReservados: 65,
-    imagen: '/imagenesL/cienaños.jpg',
+    imagen: imagenCienAnos,
     descripcion: 'relata la saga de siete generaciones de la familia Buendía en el pueblo de Macondo. A través del realismo mágico, la obra entrelaza la soledad, el amor, los conflictos políticos y el destino trágico de sus personajes, reflejando de forma alegórica la historia de América Latina.'
 
   },
@@ -48,7 +55,7 @@ const EVENTOS_INICIALES = [
     categoria: 'terror',
     cuposTotales: 30,
     cuposReservados: 28,
-    imagen: '/imagenesl/terror.jpg',
+    imagen: imagenTerror,
     descripcion: 'una casa inquietante que esconde secretos perturbadores. A medida que se revelan los misterios del lugar, los protagonistas se enfrentan a fenómenos inexplicables y situaciones aterradoras que los llevan al límite entre la realidad y lo sobrenatural.'
   },
   {
@@ -63,7 +70,7 @@ const EVENTOS_INICIALES = [
     categoria: 'neurociencia/psicología experimental',
     cuposTotales: 150,
     cuposReservados: 140,
-    imagen: '/imagenesL/lavida.jpg',
+    imagen: imagenLaVida,
     descripcion: 'En este encuentro analizaremos los descubrimientos más impactantes sobre el cerebro humano y su aplicación práctica en el desarrollo personal, la toma de decisiones y el pensamiento crítico.'
   },
   {
@@ -78,7 +85,7 @@ const EVENTOS_INICIALES = [
     categoria: 'Desarrollo personal / Autoayuda',
     cuposTotales: 25,
     cuposReservados: 25,
-    imagen: '/imagenesL/piense.jpg',
+    imagen: imagenPiense,
     descripcion: 'Napoleon Hill sintetiza 13 principios para alcanzar el éxito, la riqueza y la autosuperación a través del poder de la mente, la fe y la perseverancia. En este encuentro analizaremos cómo aplicar sus enseñanzas al contexto profesional y personal actual.'
   },
   {
@@ -93,7 +100,7 @@ const EVENTOS_INICIALES = [
     categoria: 'Juvenil / Romance dramático',
     cuposTotales: 60,
     cuposReservados: 40,
-    imagen: '/imagenesL/boulevard.jpg',
+    imagen: imagenBoulevard,
     descripcion: 'narra la intensa e inolvidable historia de Luke Howland y Hasley Weigel, dos jóvenes con realidades opuestas que cruzan sus caminos en un boulevard metafórico de emociones, adicciones y superación personal. En esta actividad exploraremos los temas centrales de la obra —el duelo, la salud mental, el amor juvenil y el impacto de las decisiones emocionales— en un espacio interactivo de debate y reflexión compartida.'
   },
   {
@@ -108,7 +115,7 @@ const EVENTOS_INICIALES = [
     categoria: 'Literatura infantil',
     cuposTotales: 40,
     cuposReservados: 15,
-    imagen: '/imagenesL/principitoL.jpg',
+    imagen: imagenPrincipito,
     descripcion: 'es una obra maestra de la literatura universal que, bajo la apariencia de un cuento infantil, aborda profundas reflexiones filosóficas sobre la naturaleza humana, el amor, la amistad, la soledad y el sentido de la vida.'
   },
   {
@@ -123,7 +130,7 @@ const EVENTOS_INICIALES = [
     categoria: 'Novela clásica',
     cuposTotales: 100,
     cuposReservados: 52,
-    imagen: '/imagenesL/orgullo.png',
+    imagen: imagenOrgullo,
     descripcion: 'Exploramos cómo las narrativas y la sátira social de Jane Austen siguen influyendo en las historias románticas contemporáneas.'
   }
 ];
@@ -143,7 +150,6 @@ export default function SeccionEventos() {
   // Estado para desplegar la lista de inscripciones en el header
   const [verMisReservas, setVerMisReservas] = useState(false);
 
-  const location = useLocation();
 
   const totalReservas = Object.keys(reservasConfirmadas).length;
 
@@ -227,131 +233,8 @@ export default function SeccionEventos() {
   };
 
   return (
-    <section className="eventos-section" style={{ paddingTop: '80px' }}>
-      
-      {/* Header con menú desplegable de inscripciones */}
-      <header className="navbar navbar-expand-lg navbar-light bg-white border-bottom px-4 py-3 fixed-top top-0 start-0 w-100 shadow-sm z-3">
-        <div className="container-fluid d-flex justify-content-between align-items-center">
-          <div className="d-flex align-items-center gap-2">
-            <div>
-              <h2 className="h6 mb-0 fw-bold">Rincón del Libro</h2>
-            </div>
-          </div>
-
-          <nav className="d-none d-lg-flex gap-4">
-            <Link 
-              to="/" 
-              className={`text-dark text-decoration-none fw-semibold pb-1 ${location.pathname === '/' ? 'border-bottom border-2 border-dark font-bold' : ''}`}
-            >
-              Inicio
-            </Link>
-            <Link 
-              to="/libros" 
-              className={`text-dark text-decoration-none fw-semibold pb-1 ${location.pathname === '/libros' ? 'border-bottom border-2 border-dark font-bold' : ''}`}
-            >
-              Libros
-            </Link>
-            <Link 
-              to="/categorias" 
-              className={`text-dark text-decoration-none fw-semibold pb-1 ${location.pathname === '/categorias' ? 'border-bottom border-2 border-dark font-bold' : ''}`}
-            >
-              Categorías
-            </Link>
-            <Link 
-              to="/eventos" 
-              className={`text-dark text-decoration-none fw-semibold pb-1 ${location.pathname === '/eventos' ? 'border-bottom border-2 border-dark font-bold' : ''}`}
-            >
-              Eventos de la biblioteca
-            </Link>
-            <Link 
-              to="/club-lectura" 
-              className={`text-dark text-decoration-none fw-semibold pb-1 ${location.pathname === '/club-lectura' ? 'border-bottom border-2 border-dark font-bold' : ''}`}
-            >
-              Club de lectura
-            </Link>
-            <Link 
-              to="/nosotros" 
-              className={`text-dark text-decoration-none fw-semibold pb-1 ${location.pathname === '/nosotros' ? 'border-bottom border-2 border-dark font-bold' : ''}`}
-            >
-              Sobre nosotros
-            </Link>
-          </nav>
-
-          <div className="d-flex align-items-center gap-3">
-            <button className="btn btn-link text-dark p-0">
-              <Search size={20} />
-            </button>
-            <button className="btn btn-link text-dark p-0">
-              <User size={20} />
-            </button>
-
-            {/* Menú Desplegable de Eventos Inscritos */}
-            <div className="position-relative">
-              <button 
-                onClick={() => setVerMisReservas(!verMisReservas)} 
-                className="btn btn-link text-dark p-0 position-relative"
-                title="Mis eventos inscriptos"
-              >
-                <Ticket size={22} />
-                {totalReservas > 0 && (
-                  <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark">
-                    {totalReservas}
-                  </span>
-                )}
-              </button>
-
-              {/* Popover / Desplegable */}
-              {verMisReservas && (
-                <div 
-                  className="position-absolute end-0 mt-2 bg-white border rounded shadow-lg p-3" 
-                  style={{ width: '320px', zIndex: 1000 }}
-                >
-                  <div className="d-flex justify-content-between align-items-center mb-2 pb-2 border-bottom">
-                    <h6 className="mb-0 fw-bold" style={{ color: 'var(--c-bistre)' }}>Mis Eventos Reservados</h6>
-                    <button onClick={() => setVerMisReservas(false)} className="btn btn-sm btn-link text-secondary p-0">
-                      <X size={16} />
-                    </button>
-                  </div>
-
-                  {totalReservas === 0 ? (
-                    <p className="text-muted text-center my-3" style={{ fontSize: '0.85rem' }}>
-                      No te has inscripto a ningún evento todavía.
-                    </p>
-                  ) : (
-                    <div style={{ maxHeight: '250px', overflowY: 'auto' }}>
-                      {Object.entries(reservasConfirmadas).map(([id, res]) => (
-                        <div key={id} className="p-2 mb-2 rounded bg-light border d-flex justify-content-between align-items-start">
-                          <div>
-                            <p className="fw-bold mb-1" style={{ fontSize: '0.85rem', color: 'var(--c-bistre)' }}>
-                              {res.titulo}
-                            </p>
-                            <p className="text-muted mb-1" style={{ fontSize: '0.75rem' }}>
-                              📅 {res.fecha} | ⏰ {res.horario}
-                            </p>
-                            <span className="badge bg-secondary" style={{ fontSize: '0.65rem' }}>
-                              Inscripto: {res.nombre}
-                            </span>
-                          </div>
-                          <button 
-                            onClick={() => handleCancelarReserva(Number(id))}
-                            className="btn btn-link text-danger p-0 ms-2"
-                            title="Cancelar inscripción"
-                          >
-                            <Trash2 size={14} />
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-
-          </div>
-        </div>
-      </header>
-
-      <div className="eventos-container">
+    <section className="eventos-section">
+<div className="eventos-container">
         
         <div className="filtros-bar">
           <div className="input-container">
@@ -411,7 +294,7 @@ export default function SeccionEventos() {
               return (
                 <article key={ev.id} className="evento-card">
                   <div className="evento-img-wrapper">
-                    <img src={ev.imagen} alt={ev.libro} className="evento-img" />
+                    <img src={ev.imagen} alt={`Portada de ${ev.libro}`} className="evento-img" loading="lazy" onError={(e) => { e.currentTarget.style.visibility = 'hidden'; }} />
                     <div style={{ position: 'absolute', top: '0.75rem', left: '0.75rem' }}>
                       <span className="badge-categoria">
                         {ev.formato === 'Virtual' ? <Video size={12} /> : <MapPin size={12} />}
