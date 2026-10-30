@@ -12,10 +12,11 @@ import {
   FaTwitter, 
   FaSearch 
 } from 'react-icons/fa';
+
 export default function SobreNosotros() {
   return (
     <div className="sobre-nosotros-container">
-{/* CONTENIDO PRINCIPAL */}
+      {/* CONTENIDO PRINCIPAL */}
       <main className="main-content">
         <div className="content-grid">
           {/* Columna Izquierda: Historia */}
@@ -23,7 +24,7 @@ export default function SobreNosotros() {
             <span className="subtitle-tag">NUESTRA HISTORIA Y PASIÓN</span>
             <h2>libros para cada momento y lugar</h2>
             <p>
-              En <strong>El rincón del libro</strong> Hacemos de la lectura un espacio de calma, 
+              En <strong>El rincón del libro</strong> hacemos de la lectura un espacio de calma, 
               descubrimiento y conexión. Te ofrecemos cada libro con la dedicación que 
               merece TU historia.
             </p>
@@ -36,7 +37,7 @@ export default function SobreNosotros() {
                 <div className="branch-card">
                   <div className="branch-title"><FaMapMarkerAlt /> <h4>Sucursal Jumbo</h4></div>
                   <p><FaClock /> Lunes a Sáb: 9:00 - 20:00 hs</p>
-                  <p><FaMapMarkerAlt /> A, Juan Julian Lastra.</p>
+                  <p><FaMapMarkerAlt /> Av. Juan Julián Lastra</p>
                   <span className="badge-tag">INCLUYE SECTOR LECTURA</span>
                 </div>
 
@@ -52,7 +53,7 @@ export default function SobreNosotros() {
                 <div className="branch-card">
                   <div className="branch-title"><FaMapMarkerAlt /> <h4>Sucursal Alto Comahue Shopping</h4></div>
                   <p><FaClock /> Lunes a Vie: 9:00 - 18:00 hs</p>
-                  <p><FaMapMarkerAlt /> Av. Dr.Ramon 355</p>
+                  <p><FaMapMarkerAlt /> Av. Dr. Ramón 355</p>
                   <span className="badge-tag">SECTOR DE LECTURA</span>
                 </div>
               </div>
@@ -65,24 +66,24 @@ export default function SobreNosotros() {
               <div className="card-top-icon"><FaBook /></div>
               <h3>Nuestra historia</h3>
               <p>
-               Fundada con la pasión de compartir historias, El rincón del libro cuenta con una sólida trayectoria en el rubro editorial. Lo que comenzó como un pequeño proyecto ha crecido gracias a la confianza de nuestros lectores, manteniendo intacta nuestra vocación por cultivar la lectura durante mas de diez años!. Más que una librería, somos un espacio cercano donde conviven los grandes clásicos, las últimas novedades y una comunidad unida por el amor a los libros.
+                Fundada con la pasión de compartir historias, El rincón del libro cuenta con una sólida trayectoria en el rubro editorial. Lo que comenzó como un pequeño proyecto ha crecido gracias a la confianza de nuestros lectores, manteniendo intacta nuestra vocación por cultivar la lectura durante más de diez años. Más que una librería, somos un espacio cercano donde conviven los grandes clásicos, las últimas novedades y una comunidad unida por el amor a los libros.
               </p>
               <div className="card-badges-row">
-                <span className="small-tag">Gracias por ser parte de nuestra historia!</span>
+                <span className="small-tag">¡Gracias por ser parte de nuestra historia!</span>
                 <span className="dot">•</span>
-                <span className="small-tag">-El Rincon del Libro</span>
+                <span className="small-tag">- El Rincón del Libro</span>
               </div>
               <div className="card-footer-info">
                 <span className="circle-badge">RDL</span>
                 <div>
-                  <strong>Desde 2001 acompañandote</strong>
-                  <small>Más de 20 años divirtiendo lecturas</small>
+                  <strong>Desde 2001 acompañándote</strong>
+                  <small>Más de 20 años compartiendo lecturas</small>
                 </div>
               </div>
             </div>
           </aside>
         </div>
       </main>
-</div>
+    </div>
   );
 }
