@@ -1,0 +1,35 @@
+
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Importar libros - Rincón del Libro</title>
+</head>
+<body>
+  <h1>Importación de libros</h1>
+  <p>Ingresá con tu cuenta administradora para importar los libros de ejemplo.</p>
+
+  <form id="formImportacion">
+    <label>
+      Correo electrónico
+      <input id="correo" type="email" required />
+    </label>
+    <br /><br />
+
+    <label>
+      Contraseña
+      <input id="contrasena" type="password" required />
+    </label>
+    <br /><br />
+
+    <button type="submit" id="botonImportar">
+      Importar libros
+    </button>
+  </form>
+
+  <p id="resultado" role="status"></p>
+
+  <script type="module" src="/src/importar-libros.js"></script>
+</body>
+</html>

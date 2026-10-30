@@ -1,3 +1,6 @@
+import { useAuth } from '../contextos/AuthContext.jsx';
+import { signOut } from 'firebase/auth';
+import { auth } from '../firebase.js';
 import React from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import '../css/site-layout.css';
@@ -9,21 +12,81 @@ const navItems = [
   { to: '/libros', label: 'Libros' },
 ];
 
+
 export function SiteHeader() {
-  return <header className="site-header">
-    <div className="site-header-inner">
-      <Link to="/" className="site-brand" aria-label="Rincón del Libro, inicio">
-        <span className="site-brand-icon"><span className="site-book-symbol" aria-hidden="true">▤</span></span>
-        <span className="site-brand-copy"><strong>Rincón del Libro</strong><small>Historias que nos unen</small></span>
-      </Link>
-      <nav className="site-nav" aria-label="Navegación principal">
-        {navItems.map(item => <NavLink key={item.to} to={item.to} end={item.end} className={({isActive}) => `site-nav-link${isActive ? ' is-active' : ''}`}>{item.label}</NavLink>)}
-      </nav>
-      <Link className="site-header-cta" to="/registro">Crear cuenta <span aria-hidden="true">↗</span></Link>
-      <button className="site-mobile-menu" aria-label="Abrir menú" onClick={() => document.querySelector('.site-nav')?.classList.toggle('site-nav-open')}>☰</button>
-    </div>
-  </header>;
+  const { usuario, perfil, esAdmin, cargandoUsuario } = useAuth();
+
+  const handleCerrarSesion = async () => {
+    try {
+      await signOut(auth);
+    } catch (error) {
+      console.error('Error al cerrar sesión:', error);
+    }
+  };
+
+  return (
+    <header className="site-header">
+      <div className="site-header-inner">
+        <Link to="/" className="site-brand" aria-label="Rincón del Libro, inicio">
+          <span className="site-brand-icon">
+            <span className="site-book-symbol" aria-hidden="true">▤</span>
+          </span>
+          <span className="site-brand-copy">
+            <strong>Rincón del Libro</strong>
+            <small>Historias que nos unen</small>
+          </span>
+        </Link>
+
+        <nav className="site-nav" aria-label="Navegación principal">
+          {navItems.map(item => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              end={item.end}
+              className={({ isActive }) =>
+                `site-nav-link${isActive ? ' is-active' : ''}`
+              }
+            >
+              {item.label}
+            </NavLink>
+          ))}
+        </nav>
+
+        {!cargandoUsuario && (
+          usuario && perfil ? (
+            <div className="site-header-user">
+              <span className="site-header-user-label">
+                {esAdmin ? 'Administrador' : 'Mi cuenta'}
+              </span>
+              <button
+                type="button"
+                className="site-header-cta"
+                onClick={handleCerrarSesion}
+              >
+                Cerrar sesión
+              </button>
+            </div>
+          ) : (
+            <Link className="site-header-cta" to="/registro">
+              Crear cuenta <span aria-hidden="true">↗</span>
+            </Link>
+          )
+        )}
+
+        <button
+          className="site-mobile-menu"
+          aria-label="Abrir menú"
+          onClick={() =>
+            document.querySelector('.site-nav')?.classList.toggle('site-nav-open')
+          }
+        >
+          ☰
+        </button>
+      </div>
+    </header>
+  );
 }
+
 
 export function SiteFooter() {
   return <footer className="site-footer-shared">
