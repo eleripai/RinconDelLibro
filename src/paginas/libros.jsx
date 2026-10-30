@@ -1,3 +1,5 @@
+import { collection, onSnapshot } from 'firebase/firestore';
+import { db } from '../firebase.js';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { LIBROS_INICIALES } from '../datos/libros.js';
@@ -97,7 +99,9 @@ function AdminPanel({ libros, onSave, onDelete, onClose }) {
 
 export default function Libros() {
   const [searchParams] = useSearchParams();
-  const [libros, setLibros] = useState(() => readStorage(DB_KEY, LIBROS_INICIALES));
+  const [libros, setLibros] = useState([]);
+const [cargandoLibros, setCargandoLibros] = useState(true);
+const [errorLibros, setErrorLibros] = useState('');
   const [busqueda, setBusqueda] = useState(() => searchParams.get('buscar') || '');
   const [categoria, setCategoria] = useState(() => searchParams.get('categoria') || 'Todas');
   const [orden, setOrden] = useState('relevancia');
@@ -111,7 +115,30 @@ export default function Libros() {
   const [toast, setToast] = useState('');
   const [showTop, setShowTop] = useState(false);
 
-  useEffect(() => localStorage.setItem(DB_KEY, JSON.stringify(libros)), [libros]);
+  useEffect(() => {
+  const referenciaLibros = collection(db, 'libros');
+
+  const cancelar = onSnapshot(
+    referenciaLibros,
+    (snapshot) => {
+      const librosFirebase = snapshot.docs.map((documento) => ({
+        ...documento.data(),
+        id: Number(documento.id),
+      }));
+
+      setLibros(librosFirebase);
+      setCargandoLibros(false);
+      setErrorLibros('');
+    },
+    (error) => {
+      console.error('Error al cargar los libros:', error);
+      setErrorLibros('No se pudieron cargar los libros. Intentá nuevamente.');
+      setCargandoLibros(false);
+    }
+  );
+
+  return () => cancelar();
+}, []);
   useEffect(() => localStorage.setItem(FAVORITOS_KEY, JSON.stringify(favoritos)), [favoritos]);
   useEffect(() => localStorage.setItem(LECTURA_KEY, JSON.stringify(lectura)), [lectura]);
   useEffect(() => { const onScroll = () => setShowTop(window.scrollY > 500); window.addEventListener('scroll', onScroll); return () => window.removeEventListener('scroll', onScroll); }, []);
@@ -138,9 +165,7 @@ export default function Libros() {
 
   return (
     <div className="biblioteca-page">
-      <header className="library-nav"><Link to="/" className="brand">Rincón <span>del Libro</span></Link><nav><Link to="/">Inicio</Link><a className="active" href="#coleccion">Libros</a><a href="#categorias">Categorías</a><a href="#estadisticas">Nuestra colección</a></nav><div className="nav-tools"><button onClick={() => setSoloFavoritos(v => !v)} className={soloFavoritos ? 'tool active' : 'tool'}>♥ <span>Favoritos</span></button><button className="admin-toggle" onClick={() => setAdminOpen(v => !v)}>⚙ Administrar</button></div></header>
-
-      <main>
+<main>
         <section className="library-hero">
           <div className="hero-copy"><span className="library-eyebrow">NUESTRA COLECCIÓN · {stats.total} LIBROS</span><h1>Una biblioteca<br /><em>llena de historias.</em></h1><p>Explorá, filtrá y descubrí tu próxima lectura. Guardá favoritos y armá tu propia lista.</p><div className="hero-mini-stats"><span><b>{stats.disponibles}</b> disponibles</span><span><b>{stats.categorias}</b> categorías</span><span><b>{stats.favoritos}</b> favoritos</span></div></div><div className="hero-stack"><div className="stack-card one">✦</div><div className="stack-card two">LIBROS</div><div className="stack-card three">RDL</div></div>
         </section>
@@ -148,6 +173,9 @@ export default function Libros() {
         {adminOpen && <AdminPanel libros={libros} onSave={saveBook} onDelete={deleteBook} onClose={() => setAdminOpen(false)} />}
 
         <section id="coleccion" className="library-content">
+          {cargandoLibros && <p role="status">Cargando libros...</p>}
+
+{errorLibros && <p role="alert">{errorLibros}</p>}
           <div className="search-box"><span>⌕</span><input value={busqueda} onChange={e => setBusqueda(e.target.value)} placeholder="Buscar por título, autor o categoría..." />{busqueda && <button onClick={() => setBusqueda('')}>×</button>}<kbd>Ctrl K</kbd></div>
           <div className="filter-toolbar"><div className="quick-categories" id="categorias">{categorias.map(cat => <button key={cat} className={categoria === cat ? 'quick active' : 'quick'} onClick={() => setCategoria(cat)}>{cat}</button>)}</div><div className="filters"><select value={orden} onChange={e => setOrden(e.target.value)}><option value="relevancia">Más recomendados</option><option value="titulo">Título A-Z</option><option value="autor">Autor A-Z</option><option value="nuevo">Más recientes</option><option value="paginas">Más páginas</option></select><label><input type="checkbox" checked={soloDisponibles} onChange={e => setSoloDisponibles(e.target.checked)} /> Disponibles</label><button className="view-btn" onClick={() => setVista(v => v === 'grid' ? 'list' : 'grid')} title="Cambiar vista">{vista === 'grid' ? '☷' : '▦'}</button></div></div>
 
@@ -161,8 +189,7 @@ export default function Libros() {
 
         <section id="estadisticas" className="stats-section"><div><span>LA BIBLIOTECA EN NÚMEROS</span><h2>Hay una historia esperando por vos.</h2></div><div className="stats-grid"><div><strong>{stats.total}</strong><span>Libros</span></div><div><strong>{stats.disponibles}</strong><span>Disponibles</span></div><div><strong>{stats.categorias}</strong><span>Categorías</span></div><div><strong>{stats.favoritos}</strong><span>Favoritos</span></div></div></section>
       </main>
-      <footer className="library-footer"><Link to="/">← Volver al inicio</Link><span>Rincón del Libro · Biblioteca digital</span><button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>Volver arriba ↑</button></footer>
-      {showTop && <button className="floating-top" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>↑</button>}
+{showTop && <button className="floating-top" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>↑</button>}
       {seleccionado && <BookModal libro={seleccionado} favorito={favoritos.includes(seleccionado.id)} enLectura={lectura.includes(seleccionado.id)} onClose={() => setSeleccionado(null)} onFavorite={() => { toggleFavorite(seleccionado.id); setToast(favoritos.includes(seleccionado.id) ? 'Quitado de favoritos' : '♥ Agregado a favoritos'); }} onReading={() => { toggleReading(seleccionado.id); setToast(lectura.includes(seleccionado.id) ? 'Quitado de tu lista' : '✓ Agregado a tu lista de lectura'); }} />}
       {toast && <div className="toast">{toast}</div>}
     </div>
