@@ -1,11 +1,10 @@
-import { collection, onSnapshot } from 'firebase/firestore';
+import { collection, onSnapshot, doc, setDoc, deleteDoc } from 'firebase/firestore';
 import { db } from '../firebase.js';
 import React, { useEffect, useMemo, useState } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
-import { LIBROS_INICIALES } from '../datos/libros.js';
+import { useSearchParams } from 'react-router-dom';
+import { useAuth } from '../contextos/AuthContext.jsx';
 import '../css/libros.css';
 
-const DB_KEY = 'rincon-del-libro-db-v2';
 const FAVORITOS_KEY = 'rincon-del-libro-favoritos';
 const LECTURA_KEY = 'rincon-del-libro-lectura';
 const CATEGORIAS_BASE = ['Todas', 'Novela', 'Fantasía', 'Ciencia ficción', 'Romance', 'Clásicos', 'Misterio', 'Realismo mágico', 'Terror', 'Aventura'];
@@ -71,13 +70,13 @@ function AdminPanel({ libros, onSave, onDelete, onClose }) {
   const submit = (e) => {
     e.preventDefault();
     if (!form.titulo.trim() || !form.autor.trim()) return;
-    onSave({ ...form, id: editingId || Date.now(), año: Number(form.año), paginas: Number(form.paginas), rating: Number(form.rating) });
+    onSave({ ...form, id: editingId || String(Date.now()), año: Number(form.año), paginas: Number(form.paginas), rating: Number(form.rating) });
     setForm(empty); setEditingId(null);
   };
 
   return (
     <section className="admin-panel" id="admin">
-      <div className="admin-title"><div><span>ADMINISTRACIÓN</span><h2>{editingId ? 'Editar libro' : 'Agregar libro'}</h2><p>Los cambios se guardan automáticamente en la base de datos local del navegador.</p></div><button onClick={onClose} className="admin-close">Cerrar ×</button></div>
+      <div className="admin-title"><div><span>ADMINISTRACIÓN</span><h2>{editingId ? 'Editar libro' : 'Agregar libro'}</h2><p>Los cambios se guardan en la base de datos de la biblioteca.</p></div><button onClick={onClose} className="admin-close">Cerrar ×</button></div>
       <form className="book-form" onSubmit={submit}>
         <input placeholder="Título" value={form.titulo} onChange={(e) => change('titulo', e.target.value)} required />
         <input placeholder="Autor" value={form.autor} onChange={(e) => change('autor', e.target.value)} required />
@@ -99,6 +98,7 @@ function AdminPanel({ libros, onSave, onDelete, onClose }) {
 
 export default function Libros() {
   const [searchParams] = useSearchParams();
+  const { esAdmin } = useAuth();
   const [libros, setLibros] = useState([]);
 const [cargandoLibros, setCargandoLibros] = useState(true);
 const [errorLibros, setErrorLibros] = useState('');
@@ -123,7 +123,7 @@ const [errorLibros, setErrorLibros] = useState('');
     (snapshot) => {
       const librosFirebase = snapshot.docs.map((documento) => ({
         ...documento.data(),
-        id: Number(documento.id),
+        id: documento.id,
       }));
 
       setLibros(librosFirebase);
@@ -160,8 +160,30 @@ const [errorLibros, setErrorLibros] = useState('');
   const toggleFavorite = (id) => setFavoritos(old => old.includes(id) ? old.filter(x => x !== id) : [...old, id]);
   const toggleReading = (id) => setLectura(old => old.includes(id) ? old.filter(x => x !== id) : [...old, id]);
   const reset = () => { setBusqueda(''); setCategoria('Todas'); setSoloDisponibles(false); setSoloFavoritos(false); setOrden('relevancia'); };
-  const saveBook = (book) => { setLibros(old => old.some(x => x.id === book.id) ? old.map(x => x.id === book.id ? book : x) : [book, ...old]); setToast('✓ Biblioteca actualizada'); };
-  const deleteBook = (id) => { setLibros(old => old.filter(x => x.id !== id)); setFavoritos(old => old.filter(x => x !== id)); setLectura(old => old.filter(x => x !== id)); setToast('Libro eliminado'); };
+  const saveBook = async (book) => {
+    if (!esAdmin) return;
+    try {
+      const id = String(book.id);
+      const { id: _id, ...datos } = book;
+      await setDoc(doc(db, 'libros', id), datos, { merge: true });
+      setToast('✓ Libro guardado en la base de datos');
+    } catch (error) {
+      console.error('Error al guardar libro:', error);
+      setToast('No se pudo guardar el libro. Revisá los permisos de Firestore.');
+    }
+  };
+  const deleteBook = async (id) => {
+    if (!esAdmin) return;
+    try {
+      await deleteDoc(doc(db, 'libros', String(id)));
+      setFavoritos(old => old.filter(x => x !== id));
+      setLectura(old => old.filter(x => x !== id));
+      setToast('Libro eliminado');
+    } catch (error) {
+      console.error('Error al eliminar libro:', error);
+      setToast('No se pudo eliminar el libro.');
+    }
+  };
 
   return (
     <div className="biblioteca-page">
@@ -170,7 +192,8 @@ const [errorLibros, setErrorLibros] = useState('');
           <div className="hero-copy"><span className="library-eyebrow">NUESTRA COLECCIÓN · {stats.total} LIBROS</span><h1>Una biblioteca<br /><em>llena de historias.</em></h1><p>Explorá, filtrá y descubrí tu próxima lectura. Guardá favoritos y armá tu propia lista.</p><div className="hero-mini-stats"><span><b>{stats.disponibles}</b> disponibles</span><span><b>{stats.categorias}</b> categorías</span><span><b>{stats.favoritos}</b> favoritos</span></div></div><div className="hero-stack"><div className="stack-card one">✦</div><div className="stack-card two">LIBROS</div><div className="stack-card three">RDL</div></div>
         </section>
 
-        {adminOpen && <AdminPanel libros={libros} onSave={saveBook} onDelete={deleteBook} onClose={() => setAdminOpen(false)} />}
+        {esAdmin && <div className="library-admin-access"><button className="admin-toggle" onClick={() => setAdminOpen(v => !v)}>{adminOpen ? 'Cerrar administración' : '⚙ Administración'}</button></div>}
+        {esAdmin && adminOpen && <AdminPanel libros={libros} onSave={saveBook} onDelete={deleteBook} onClose={() => setAdminOpen(false)} />}
 
         <section id="coleccion" className="library-content">
           {cargandoLibros && <p role="status">Cargando libros...</p>}

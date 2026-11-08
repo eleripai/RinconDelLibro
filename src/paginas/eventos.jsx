@@ -1,4 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
+import {
+  collection, doc, onSnapshot, runTransaction, setDoc, deleteDoc,
+  serverTimestamp, getDocs
+} from 'firebase/firestore';
+import { db } from '../firebase.js';
+import { useAuth } from '../contextos/AuthContext.jsx';
 import '../css/eventos.css';
 import imagenCienAnos from '../assets/imagenesL/cien-anos.jpg';
 import imagenTerror from '../assets/imagenesL/terror.jpg';
@@ -7,23 +13,10 @@ import imagenPiense from '../assets/imagenesL/piense.jpg';
 import imagenBoulevard from '../assets/imagenesL/boulevard.jpg';
 import imagenPrincipito from '../assets/imagenesL/principitoL.jpg';
 import imagenOrgullo from '../assets/imagenesL/orgullo.png';
-import { Link } from "react-router-dom";
-import { 
-  Search, 
-  BookOpen, 
-  Video, 
-  MapPin, 
-  Calendar, 
-  Users, 
-  ChevronRight, 
-  CheckCircle2, 
-  Ticket, 
-  X,
-  Clock,
-  User,
-  Mail,
-  Phone,
-  Trash2
+import {
+  Search, BookOpen, Video, MapPin, Calendar, Users, ChevronRight,
+  CheckCircle2, Ticket, X, Clock, User, Mail, Phone, Trash2, Plus,
+  Pencil, ShieldCheck
 } from 'lucide-react';
 
 const EVENTOS_INICIALES = [
@@ -135,376 +128,332 @@ const EVENTOS_INICIALES = [
   }
 ];
 
+const EVENTOS_COLLECTION = 'eventos';
+
+function normalizarEvento(ev) {
+  const total = Number(ev.totalEntradas ?? ev.cuposTotales ?? 0);
+  const stock = Number(ev.stock ?? Math.max(0, total - Number(ev.cuposReservados || 0)));
+  return {
+    ...ev,
+    id: String(ev.id),
+    totalEntradas: total,
+    stock: Math.max(0, stock),
+    horarios: Array.isArray(ev.horarios) ? ev.horarios : [],
+    formato: String(ev.formato || 'Presencial').toLowerCase() === 'virtual' ? 'Virtual' : 'Presencial'
+  };
+}
+
+const eventoVacio = {
+  titulo: '', autor: '', libro: '', fecha: '', horarios: '18:00 HS',
+  formato: 'Presencial', lugar: '', categoria: 'Club de Lectura',
+  totalEntradas: 30, imagen: '', descripcion: ''
+};
+
 export default function SeccionEventos() {
-  const [eventos, setEventos] = useState(EVENTOS_INICIALES);
+  const { usuario, perfil, esAdmin, cargandoUsuario } = useAuth();
+  const [eventos, setEventos] = useState([]);
+  const [misReservas, setMisReservas] = useState({});
   const [busqueda, setBusqueda] = useState('');
   const [categoriaSel, setCategoriaSel] = useState('Todas');
   const [formatoSel, setFormatoSel] = useState('Todos');
-  
-  const [reservasConfirmadas, setReservasConfirmadas] = useState({});
   const [modalEvento, setModalEvento] = useState(null);
   const [horarioSeleccionado, setHorarioSeleccionado] = useState('');
-  const [datosUsuario, setDatosUsuario] = useState({ nombre: '', email: '', telefono: '' });
+  const [cantidad, setCantidad] = useState(1);
   const [errorFormulario, setErrorFormulario] = useState('');
-  
-  // Estado para desplegar la lista de inscripciones en el header
-  const [verMisReservas, setVerMisReservas] = useState(false);
+  const [mensaje, setMensaje] = useState('');
+  const [procesando, setProcesando] = useState(false);
+  const [adminAbierto, setAdminAbierto] = useState(false);
+  const [formEvento, setFormEvento] = useState(eventoVacio);
+  const [eventoEditando, setEventoEditando] = useState(null);
 
+  useEffect(() => {
+    const ref = collection(db, EVENTOS_COLLECTION);
+    const cancelar = onSnapshot(ref, async (snapshot) => {
+      if (snapshot.empty) {
+        if (!esAdmin) { setEventos([]); return; }
+        // Carga inicial idempotente: los IDs fijos evitan duplicados entre sesiones.
+        const existentes = await getDocs(ref);
+        if (existentes.empty) {
+          await Promise.all(EVENTOS_INICIALES.map((ev) => {
+            const normalizado = normalizarEvento(ev);
+            return setDoc(doc(db, EVENTOS_COLLECTION, String(ev.id)), {
+              ...normalizado,
+              stock: normalizado.stock,
+              totalEntradas: normalizado.totalEntradas,
+              creadoEn: serverTimestamp()
+            });
+          }));
+        }
+        return;
+      }
+      setEventos(snapshot.docs.map(d => normalizarEvento({ ...d.data(), id: d.id })));
+    }, (error) => {
+      console.error('No se pudieron cargar los eventos:', error);
+      setErrorFormulario('No se pudieron cargar los eventos. Revisá las reglas de Firestore.');
+    });
+    return () => cancelar();
+  }, [esAdmin]);
 
-  const totalReservas = Object.keys(reservasConfirmadas).length;
+  useEffect(() => {
+    if (!usuario) { setMisReservas({}); return; }
+    const ref = collection(db, 'perfiles', usuario.uid, 'reservas');
+    return onSnapshot(ref, snap => {
+      const reservas = {};
+      snap.docs.forEach(d => { reservas[d.id] = { id: d.id, ...d.data() }; });
+      setMisReservas(reservas);
+    }, error => {
+      console.error('Error al cargar tus reservas:', error);
+      setErrorFormulario('No se pudieron cargar tus reservas. Revisá las reglas de Firestore.');
+    });
+  }, [usuario]);
 
-  const eventosFiltrados = eventos.filter((ev) => {
-    const coincideTexto = 
-      ev.titulo.toLowerCase().includes(busqueda.toLowerCase()) ||
-      ev.autor.toLowerCase().includes(busqueda.toLowerCase()) ||
-      ev.libro.toLowerCase().includes(busqueda.toLowerCase());
+  useEffect(() => {
+    if (!modalEvento) return;
+    const anterior = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    const cerrarConEscape = (e) => { if (e.key === 'Escape') cerrarModal(); };
+    window.addEventListener('keydown', cerrarConEscape);
+    return () => {
+      document.body.style.overflow = anterior;
+      window.removeEventListener('keydown', cerrarConEscape);
+    };
+  }, [modalEvento]);
 
-    const coincideCategoria = categoriaSel === 'Todas' || ev.categoria === categoriaSel;
-    const coincideFormato = formatoSel === 'Todos' || ev.formato === formatoSel;
-
-    return coincideTexto && coincideCategoria && coincideFormato;
-  });
+  const eventosFiltrados = useMemo(() => eventos.filter(ev => {
+    const q = busqueda.toLowerCase();
+    return (!q || `${ev.titulo} ${ev.autor} ${ev.libro}`.toLowerCase().includes(q))
+      && (categoriaSel === 'Todas' || ev.categoria === categoriaSel)
+      && (formatoSel === 'Todos' || ev.formato === formatoSel);
+  }), [eventos, busqueda, categoriaSel, formatoSel]);
 
   const abrirModal = (evento) => {
+    const reserva = misReservas[evento.id];
     setModalEvento(evento);
-    const reservaPrevia = reservasConfirmadas[evento.id];
-    
-    if (reservaPrevia) {
-      setHorarioSeleccionado(reservaPrevia.horario);
-      setDatosUsuario({
-        nombre: reservaPrevia.nombre,
-        email: reservaPrevia.email,
-        telefono: reservaPrevia.telefono
-      });
-    } else {
-      setHorarioSeleccionado(evento.horarios[0] || '');
-      setDatosUsuario({ nombre: '', email: '', telefono: '' });
-    }
+    setHorarioSeleccionado(reserva?.horario || evento.horarios?.[0] || '');
+    setCantidad(reserva?.cantidad || 1);
     setErrorFormulario('');
+    setMensaje('');
   };
+  const cerrarModal = () => { setModalEvento(null); setErrorFormulario(''); };
 
-  const cerrarModal = () => {
-    setModalEvento(null);
-    setErrorFormulario('');
-  };
-
-  const handleConfirmarReserva = (e) => {
+  const confirmarReserva = async (e) => {
     e.preventDefault();
-    if (!datosUsuario.nombre.trim() || !datosUsuario.email.trim() || !datosUsuario.telefono.trim()) {
-      setErrorFormulario('Por favor completa todos los campos para quedar anotada.');
+    if (!usuario) {
+      setErrorFormulario('Para reservar entradas tenés que iniciar sesión o crear una cuenta.');
       return;
     }
-
-    const eventoId = modalEvento.id;
-    const yaTeniaReserva = !!reservasConfirmadas[eventoId];
-
-    setReservasConfirmadas({
-      ...reservasConfirmadas,
-      [eventoId]: {
-        horario: horarioSeleccionado,
-        titulo: modalEvento.titulo,
-        fecha: modalEvento.fecha,
-        lugar: modalEvento.lugar,
-        ...datosUsuario
-      }
-    });
-
-    if (!yaTeniaReserva) {
-      setEventos(eventos.map(ev => 
-        ev.id === eventoId ? { ...ev, cuposReservados: ev.cuposReservados + 1 } : ev
-      ));
+    if (!perfil) {
+      setErrorFormulario('No se pudo cargar tu perfil. Cerrá sesión y volvé a ingresar.');
+      return;
     }
-
-    cerrarModal();
+    const qty = Math.max(1, Number(cantidad));
+    if (!horarioSeleccionado) { setErrorFormulario('Seleccioná un horario.'); return; }
+    setProcesando(true);
+    setErrorFormulario('');
+    try {
+      const eventRef = doc(db, EVENTOS_COLLECTION, modalEvento.id);
+      const reservaRef = doc(db, 'perfiles', usuario.uid, 'reservas', modalEvento.id);
+      await runTransaction(db, async (tx) => {
+        const [eventSnap, reservaSnap] = await Promise.all([tx.get(eventRef), tx.get(reservaRef)]);
+        if (!eventSnap.exists()) throw new Error('El evento ya no está disponible.');
+        const eventData = eventSnap.data();
+        const anterior = reservaSnap.exists() ? Number(reservaSnap.data().cantidad || 0) : 0;
+        const delta = qty - anterior;
+        const stock = Number(eventData.stock ?? 0);
+        if (delta > stock) throw new Error(`Solo quedan ${stock} entradas disponibles.`);
+        tx.update(eventRef, { stock: stock - delta });
+        tx.set(reservaRef, {
+          eventoId: modalEvento.id,
+          titulo: eventData.titulo,
+          fecha: eventData.fecha,
+          lugar: eventData.lugar,
+          horario: horarioSeleccionado,
+          cantidad: qty,
+          usuarioId: usuario.uid,
+          email: usuario.email || '',
+          actualizadoEn: serverTimestamp(),
+          ...(reservaSnap.exists() ? {} : { creadoEn: serverTimestamp() })
+        });
+      });
+      setMensaje('¡Tu reserva quedó confirmada!');
+      cerrarModal();
+    } catch (error) {
+      console.error(error);
+      setErrorFormulario(error.message || 'No se pudo confirmar la reserva.');
+    } finally { setProcesando(false); }
   };
 
-  const handleCancelarReserva = (eventoId) => {
-    const nuevasReservas = { ...reservasConfirmadas };
-    delete nuevasReservas[eventoId];
-    setReservasConfirmadas(nuevasReservas);
-
-    setEventos(eventos.map(ev => 
-      ev.id === eventoId ? { ...ev, cuposReservados: ev.cuposReservados - 1 } : ev
-    ));
-
-    if (modalEvento && modalEvento.id === eventoId) {
+  const cancelarReserva = async (eventoId) => {
+    if (!usuario || !misReservas[eventoId] || procesando) return;
+    setProcesando(true);
+    setErrorFormulario('');
+    try {
+      const eventRef = doc(db, EVENTOS_COLLECTION, eventoId);
+      const reservaRef = doc(db, 'perfiles', usuario.uid, 'reservas', eventoId);
+      await runTransaction(db, async tx => {
+        const [eventSnap, reservaSnap] = await Promise.all([tx.get(eventRef), tx.get(reservaRef)]);
+        if (!reservaSnap.exists()) return;
+        const qty = Number(reservaSnap.data().cantidad || 0);
+        if (eventSnap.exists()) tx.update(eventRef, { stock: Number(eventSnap.data().stock || 0) + qty });
+        tx.delete(reservaRef);
+      });
       cerrarModal();
+      setMensaje('Reserva cancelada. Las entradas volvieron al stock.');
+    } catch (error) {
+      console.error(error);
+      setErrorFormulario(error.message || 'No se pudo cancelar la reserva.');
+    } finally { setProcesando(false); }
+  };
+
+  const guardarEvento = async (e) => {
+    e.preventDefault();
+    if (!esAdmin) return;
+    const id = eventoEditando || `ev-${Date.now()}`;
+    const ref = doc(db, EVENTOS_COLLECTION, id);
+    const datos = {
+      ...formEvento,
+      horarios: formEvento.horarios.split(',').map(x => x.trim()).filter(Boolean),
+      totalEntradas: Number(formEvento.totalEntradas),
+      formato: formEvento.formato,
+      actualizadoEn: serverTimestamp()
+    };
+    try {
+      if (eventoEditando) {
+        await runTransaction(db, async tx => {
+          const snap = await tx.get(ref);
+          if (!snap.exists()) throw new Error('El evento no existe.');
+          const reservado = Number(snap.data().totalEntradas || 0) - Number(snap.data().stock || 0);
+          if (datos.totalEntradas < reservado) throw new Error(`No podés fijar menos de ${reservado} entradas: ya están reservadas.`);
+          tx.update(ref, { ...datos, stock: datos.totalEntradas - reservado });
+        });
+      } else {
+        await setDoc(ref, { ...datos, stock: datos.totalEntradas, creadoEn: serverTimestamp() });
+      }
+      setFormEvento(eventoVacio);
+      setEventoEditando(null);
+      setMensaje(eventoEditando ? 'Evento actualizado.' : 'Evento creado correctamente.');
+    } catch (error) {
+      setErrorFormulario(error.message || 'No se pudo guardar el evento.');
     }
+  };
+
+  const editarEvento = (ev) => {
+    setEventoEditando(ev.id);
+    setFormEvento({
+      ...eventoVacio, ...ev,
+      horarios: (ev.horarios || []).join(', '),
+      totalEntradas: ev.totalEntradas
+    });
+    setAdminAbierto(true);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const eliminarEvento = async (ev) => {
+    if (!esAdmin) return;
+    const reservado = ev.totalEntradas - ev.stock;
+    if (reservado > 0) {
+      setErrorFormulario(`No se puede eliminar "${ev.titulo}" porque tiene ${reservado} entradas reservadas.`);
+      return;
+    }
+    if (!window.confirm(`¿Eliminar el evento "${ev.titulo}"?`)) return;
+    try { await deleteDoc(doc(db, EVENTOS_COLLECTION, ev.id)); setMensaje('Evento eliminado.'); }
+    catch (error) { setErrorFormulario('No se pudo eliminar el evento.'); }
   };
 
   return (
     <section className="eventos-section">
-<div className="eventos-container">
-        
+      <div className="eventos-container">
+        <header className="eventos-header">
+          <span className="badge-categoria">RINCÓN DEL LIBRO</span>
+          <h1 className="eventos-title">Eventos y encuentros literarios</h1>
+          <p className="eventos-subtitle">Compartí lecturas, conocé autores y reservá tu lugar en nuestros próximos encuentros.</p>
+        </header>
+
+        {esAdmin && <div className="eventos-admin-bar">
+          <div><ShieldCheck size={20}/><strong>Administración de eventos</strong><span>Solo visible para administradores</span></div>
+          <button className="btn-primary" onClick={() => { setAdminAbierto(v => !v); setEventoEditando(null); setFormEvento(eventoVacio); }}> <Plus size={16}/> {adminAbierto ? 'Cerrar' : 'Agregar evento'}</button>
+        </div>}
+
+        {esAdmin && adminAbierto && <form className="evento-admin-form" onSubmit={guardarEvento}>
+          <h3>{eventoEditando ? 'Editar evento' : 'Nuevo evento'}</h3>
+          <input placeholder="Título del evento" value={formEvento.titulo} onChange={e=>setFormEvento({...formEvento,titulo:e.target.value})} required/>
+          <input placeholder="Autor" value={formEvento.autor} onChange={e=>setFormEvento({...formEvento,autor:e.target.value})} required/>
+          <input placeholder="Libro relacionado" value={formEvento.libro} onChange={e=>setFormEvento({...formEvento,libro:e.target.value})} required/>
+          <input type="date" value={formEvento.fecha} onChange={e=>setFormEvento({...formEvento,fecha:e.target.value})} required/>
+          <input placeholder="Horarios separados por coma" value={formEvento.horarios} onChange={e=>setFormEvento({...formEvento,horarios:e.target.value})} required/>
+          <select value={formEvento.formato} onChange={e=>setFormEvento({...formEvento,formato:e.target.value})}><option>Presencial</option><option>Virtual</option></select>
+          <input placeholder="Lugar o plataforma" value={formEvento.lugar} onChange={e=>setFormEvento({...formEvento,lugar:e.target.value})} required/>
+          <input placeholder="Categoría" value={formEvento.categoria} onChange={e=>setFormEvento({...formEvento,categoria:e.target.value})} required/>
+          <input type="number" min="0" value={formEvento.totalEntradas} onChange={e=>setFormEvento({...formEvento,totalEntradas:e.target.value})} placeholder="Stock de entradas" required/>
+          <input className="wide" placeholder="URL de imagen (opcional)" value={formEvento.imagen} onChange={e=>setFormEvento({...formEvento,imagen:e.target.value})}/>
+          <textarea className="wide" placeholder="Descripción" value={formEvento.descripcion} onChange={e=>setFormEvento({...formEvento,descripcion:e.target.value})} required/>
+          <div className="wide evento-admin-actions"><button className="btn-primary" type="submit">{eventoEditando ? 'Guardar cambios' : 'Crear evento'}</button><button className="btn-secondary" type="button" onClick={()=>{setFormEvento(eventoVacio);setEventoEditando(null);}}>Limpiar</button></div>
+          {errorFormulario && <p className="evento-error">{errorFormulario}</p>}
+        </form>}
+
         <div className="filtros-bar">
-          <div className="input-container">
-            <Search className="input-icon" />
-            <input
-              type="text"
-              placeholder="Buscar por libro, autor o título..."
-              value={busqueda}
-              onChange={(e) => setBusqueda(e.target.value)}
-              className="input-busqueda"
-            />
-          </div>
-
-          <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
-            <select
-              value={categoriaSel}
-              onChange={(e) => setCategoriaSel(e.target.value)}
-              className="select-filtro"
-            >
+          <div className="input-container"><Search className="input-icon"/><input type="text" placeholder="Buscar por libro, autor o título..." value={busqueda} onChange={e=>setBusqueda(e.target.value)} className="input-busqueda"/></div>
+          <div className="eventos-filter-controls">
+            <select value={categoriaSel} onChange={e=>setCategoriaSel(e.target.value)} className="select-filtro">
               <option value="Todas">Todas las categorías</option>
-              <option value="Presentación">Presentaciones</option>
-              <option value="Club de Lectura">Club de Lectura</option>
-              <option value="Firma">Firma de Libros</option>
-              <option value="Taller">Talleres</option>
+              {[...new Set(eventos.map(ev=>ev.categoria))].map(c=><option key={c} value={c}>{c}</option>)}
             </select>
-
-            <select
-              value={formatoSel}
-              onChange={(e) => setFormatoSel(e.target.value)}
-              className="select-filtro"
-            >
-              <option value="Todos">Todos los formatos</option>
-              <option value="Presencial">Presencial 📍</option>
-              <option value="Virtual">Virtual 💻</option>
-            </select>
+            <select value={formatoSel} onChange={e=>setFormatoSel(e.target.value)} className="select-filtro"><option value="Todos">Todos los formatos</option><option value="Presencial">Presencial</option><option value="Virtual">Virtual</option></select>
           </div>
         </div>
 
-        {eventosFiltrados.length === 0 ? (
-          <div className="evento-card" style={{ padding: '4rem 2rem', textAlign: 'center', justifyContent: 'center' }}>
-            <BookOpen style={{ width: '3rem', height: '3rem', margin: '0 auto 1rem auto', color: 'var(--c-golden-brown)' }} />
-            <p className="eventos-subtitle">No se encontraron eventos con los filtros seleccionados.</p>
-            <button 
-              onClick={() => { setBusqueda(''); setCategoriaSel('Todas'); setFormatoSel('Todos'); }}
-              className="btn-secondary"
-              style={{ marginTop: '1rem' }}
-            >
-              Restablecer filtros
-            </button>
-          </div>
-        ) : (
-          <div className="eventos-grid">
-            {eventosFiltrados.map((ev) => {
-              const estaReservado = !!reservasConfirmadas[ev.id];
-              const estaAgotado = ev.cuposReservados >= ev.cuposTotales;
-
-              return (
-                <article key={ev.id} className="evento-card">
-                  <div className="evento-img-wrapper">
-                    <img src={ev.imagen} alt={`Portada de ${ev.libro}`} className="evento-img" loading="lazy" onError={(e) => { e.currentTarget.style.visibility = 'hidden'; }} />
-                    <div style={{ position: 'absolute', top: '0.75rem', left: '0.75rem' }}>
-                      <span className="badge-categoria">
-                        {ev.formato === 'Virtual' ? <Video size={12} /> : <MapPin size={12} />}
-                        {ev.formato}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="evento-content">
-                    <div>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.75rem', marginBottom: '0.5rem' }}>
-                        <span style={{ color: 'var(--c-dark-moss-green)', fontWeight: 700 }}>{ev.categoria}</span>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', color: 'var(--text-secondary)' }}>
-                          <Calendar size={13} style={{ color: 'var(--c-golden-brown)' }} />
-                          {ev.fecha}
-                        </div>
-                      </div>
-
-                      <h3 style={{ fontSize: '1.2rem', fontWeight: 700, margin: '0 0 0.4rem 0', color: 'var(--c-bistre)' }}>
-                        {ev.titulo}
-                      </h3>
-
-                      <p style={{ fontSize: '0.825rem', color: 'var(--text-secondary)', margin: 0 }}>
-                        Libro: <strong style={{ color: 'var(--c-bistre)' }}>{ev.libro}</strong> ({ev.autor})
-                      </p>
-
-                      <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '0.4rem', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
-                        <MapPin size={13} />
-                        <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{ev.lugar}</span>
-                      </p>
-
-                      {estaReservado && (
-                        <div style={{ marginTop: '0.6rem', padding: '0.35rem 0.6rem', background: 'var(--bg-badge)', border: '1px solid var(--c-apple-green)', borderRadius: '6px', fontSize: '0.75rem', color: 'var(--c-dark-moss-green)', display: 'inline-flex', alignItems: 'center', gap: '0.3rem' }}>
-                          <Clock size={12} /> Anotada para las {reservasConfirmadas[ev.id].horario}
-                        </div>
-                      )}
-                    </div>
-
-                    <div style={{ paddingTop: '0.75rem', borderTop: '1px solid var(--border-subtle)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                        <Users size={13} />
-                        <span>{ev.cuposTotales - ev.cuposReservados} libres</span>
-                      </div>
-
-                      <div className="evento-actions">
-                        <button
-                          onClick={() => abrirModal(ev)}
-                          className="btn-secondary"
-                          title="Ver detalles e inscripciones"
-                        >
-                          <ChevronRight size={18} />
-                        </button>
-
-                        <button
-                          disabled={estaAgotado && !estaReservado}
-                          onClick={() => abrirModal(ev)}
-                          className={
-                            estaReservado
-                              ? 'btn-reserved'
-                              : estaAgotado
-                              ? 'btn-disabled'
-                              : 'btn-primary'
-                          }
-                        >
-                          {estaReservado ? (
-                            <>
-                              <CheckCircle2 size={14} /> Anotada
-                            </>
-                          ) : estaAgotado ? (
-                            'Agotado'
-                          ) : (
-                            <>
-                              <Ticket size={14} /> Reservar
-                            </>
-                          )}
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </article>
-              );
-            })}
-          </div>
-        )}
-
-        {modalEvento && (
-          <div className="modal-overlay">
-            <div className="modal-content">
-              <button onClick={cerrarModal} className="btn-secondary modal-close">
-                <X size={16} />
-              </button>
-
-              <div style={{ display: 'flex', gap: '0.5rem', fontSize: '0.75rem', fontWeight: 700, color: 'var(--c-dark-moss-green)', marginBottom: '0.25rem' }}>
-                <span>{modalEvento.categoria}</span>
-                <span>•</span>
-                <span>{modalEvento.formato}</span>
+        {eventosFiltrados.length === 0 ? <div className="evento-card evento-empty"><BookOpen/><p>No se encontraron eventos con los filtros seleccionados.</p></div> :
+          <div className="eventos-grid">{eventosFiltrados.map(ev => {
+            const reserva = misReservas[ev.id];
+            const agotado = ev.stock <= 0 && !reserva;
+            return <article key={ev.id} className="evento-card">
+              <div className="evento-img-wrapper">{ev.imagen && <img src={ev.imagen} alt={`Imagen de ${ev.titulo}`} className="evento-img" loading="lazy"/>}<span className="badge-categoria evento-format-badge">{ev.formato === 'Virtual' ? <Video size={12}/> : <MapPin size={12}/>} {ev.formato}</span></div>
+              <div className="evento-content"><div>
+                <div className="evento-meta"><span>{ev.categoria}</span><span><Calendar size={13}/> {ev.fecha}</span></div>
+                <h3>{ev.titulo}</h3><p className="evento-book">Libro: <strong>{ev.libro}</strong> ({ev.autor})</p>
+                <p className="evento-place"><MapPin size={13}/> {ev.lugar}</p>
+                {reserva && <div className="evento-reservation-badge"><CheckCircle2 size={13}/> {reserva.cantidad} entrada(s) reservada(s)</div>}
               </div>
+              <div className="evento-card-bottom"><span><Users size={14}/> {ev.stock} disponibles</span><div className="evento-actions">
+                <button onClick={()=>abrirModal(ev)} className="btn-secondary" aria-label="Ver detalles"><ChevronRight size={18}/></button>
+                <button disabled={agotado || cargandoUsuario} onClick={()=>abrirModal(ev)} className={reserva?'btn-reserved':agotado?'btn-disabled':'btn-primary'}>{reserva?<><CheckCircle2 size={14}/> Mi reserva</>:agotado?'Agotado':<><Ticket size={14}/> Reservar</>}</button>
+              </div></div>
+              </div>
+            </article>;
+          })}</div>
+        }
 
-              <h3 style={{ fontSize: '1.35rem', fontWeight: 700, margin: '0 0 0.25rem 0', color: 'var(--c-bistre)' }}>
-                {modalEvento.titulo}
-              </h3>
-              
-              <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '0.75rem' }}>
-                Libro: <strong style={{ color: 'var(--c-bistre)' }}>{modalEvento.libro}</strong> por {modalEvento.autor}
-              </p>
+        {esAdmin && <div className="evento-admin-list"><h3>Gestionar eventos</h3>{eventos.map(ev=><div className="evento-admin-row" key={ev.id}><span><strong>{ev.titulo}</strong><small>{ev.stock} disponibles de {ev.totalEntradas} · {ev.totalEntradas-ev.stock} reservadas</small></span><div><button onClick={()=>editarEvento(ev)}><Pencil size={14}/> Editar</button><button className="danger" onClick={()=>eliminarEvento(ev)}><Trash2 size={14}/> Eliminar</button></div></div>)}</div>}
 
-              <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: 1.5, marginBottom: '1rem' }}>
-                {modalEvento.descripcion}
-              </p>
+        {mensaje && <p className="evento-success" role="status">{mensaje}</p>}
+        {errorFormulario && !adminAbierto && <p className="evento-error" role="alert">{errorFormulario}</p>}
 
-              <form onSubmit={handleConfirmarReserva} style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
-                
-                <div>
-                  <label style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--c-bistre)', display: 'block', marginBottom: '0.4rem' }}>
-                    1. Selecciona tu Horario:
-                  </label>
-                  <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                    {modalEvento.horarios.map((hora) => (
-                      <button
-                        type="button"
-                        key={hora}
-                        onClick={() => setHorarioSeleccionado(hora)}
-                        style={{
-                          padding: '0.4rem 0.8rem',
-                          borderRadius: 'var(--radius-md)',
-                          border: horarioSeleccionado === hora ? '2px solid var(--c-dark-moss-green)' : '1px solid var(--border-subtle)',
-                          background: horarioSeleccionado === hora ? 'var(--c-flax)' : 'var(--bg-input)',
-                          color: 'var(--c-bistre)',
-                          fontWeight: horarioSeleccionado === hora ? 700 : 500,
-                          fontSize: '0.8rem',
-                          cursor: 'pointer',
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '0.3rem'
-                        }}
-                      >
-                        <Clock size={12} /> {hora}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div>
-                  <label style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--c-bistre)', display: 'block', marginBottom: '0.4rem' }}>
-                    2. Tus Datos para Confirmar la Asistencia:
-                  </label>
-                  
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                    <div className="input-container">
-                      <User className="input-icon" />
-                      <input
-                        type="text"
-                        placeholder="Nombre y Apellido completo"
-                        value={datosUsuario.nombre}
-                        onChange={(e) => setDatosUsuario({ ...datosUsuario, nombre: e.target.value })}
-                        className="input-busqueda"
-                      />
-                    </div>
-
-                    <div className="input-container">
-                      <Mail className="input-icon" />
-                      <input
-                        type="email"
-                        placeholder="Correo electrónico"
-                        value={datosUsuario.email}
-                        onChange={(e) => setDatosUsuario({ ...datosUsuario, email: e.target.value })}
-                        className="input-busqueda"
-                      />
-                    </div>
-
-                    <div className="input-container">
-                      <Phone className="input-icon" />
-                      <input
-                        type="tel"
-                        placeholder="Teléfono / WhatsApp"
-                        value={datosUsuario.telefono}
-                        onChange={(e) => setDatosUsuario({ ...datosUsuario, telefono: e.target.value })}
-                        className="input-busqueda"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                {errorFormulario && (
-                  <p style={{ color: '#d32f2f', fontSize: '0.75rem', margin: 0, fontWeight: 600 }}>
-                    {errorFormulario}
-                  </p>
-                )}
-
-                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem', marginTop: '0.5rem' }}>
-                  {reservasConfirmadas[modalEvento.id] && (
-                    <button
-                      type="button"
-                      onClick={() => handleCancelarReserva(modalEvento.id)}
-                      style={{ background: 'rgba(211, 47, 47, 0.1)', color: '#d32f2f', border: '1px solid #d32f2f', borderRadius: 'var(--radius-md)', padding: '0.55rem 0.9rem', fontSize: '0.85rem', fontWeight: 600, cursor: 'pointer' }}
-                    >
-                      Cancelar Reserva
-                    </button>
-                  )}
-
-                  <button type="submit" className="btn-primary">
-                    {reservasConfirmadas[modalEvento.id] ? 'Guardar Cambios' : 'Confirmar e Inscribirme'}
-                  </button>
-                </div>
-
-              </form>
-            </div>
+        {modalEvento && <div className="modal-overlay" onMouseDown={e=>e.target===e.currentTarget && cerrarModal()}>
+          <div className="modal-content evento-modal-content" role="dialog" aria-modal="true" aria-labelledby="evento-modal-title">
+            <button onClick={cerrarModal} className="btn-secondary modal-close" aria-label="Cerrar"><X size={16}/></button>
+            <span className="badge-categoria">{modalEvento.categoria} · {modalEvento.formato}</span>
+            <h2 id="evento-modal-title">{modalEvento.titulo}</h2>
+            <p className="evento-modal-book">{modalEvento.libro} — {modalEvento.autor}</p>
+            <p>{modalEvento.descripcion}</p>
+            <p><Calendar size={15}/> {modalEvento.fecha} · {modalEvento.lugar}</p>
+            <p><Ticket size={15}/> {modalEvento.stock} entradas disponibles</p>
+            <form onSubmit={confirmarReserva} className="evento-reserva-form">
+              <label>Horario
+                <select value={horarioSeleccionado} onChange={e=>setHorarioSeleccionado(e.target.value)}>{modalEvento.horarios.map(h=><option key={h}>{h}</option>)}</select>
+              </label>
+              <label>Cantidad de entradas
+                <input type="number" min="1" max={Math.max(1,modalEvento.stock + Number(misReservas[modalEvento.id]?.cantidad || 0))} value={cantidad} onChange={e=>setCantidad(e.target.value)} required/>
+              </label>
+              {!usuario && <p className="evento-login-note">Iniciá sesión para reservar entradas. <a href="/login">Ir a iniciar sesión</a></p>}
+              {misReservas[modalEvento.id] && <p className="evento-current-booking">Actualmente tenés {misReservas[modalEvento.id].cantidad} entrada(s). Al confirmar se actualizará esa cantidad.</p>}
+              {errorFormulario && <p className="evento-error">{errorFormulario}</p>}
+              <div className="evento-modal-actions">
+                {misReservas[modalEvento.id] && <button type="button" className="btn-cancel-reserva" disabled={procesando} onClick={()=>cancelarReserva(modalEvento.id)}>Cancelar todas las entradas</button>}
+                <button type="submit" className="btn-primary" disabled={procesando || !usuario}>{procesando?'Procesando...':misReservas[modalEvento.id]?'Actualizar reserva':'Confirmar reserva'}</button>
+              </div>
+            </form>
           </div>
-        )}
-
+        </div>}
       </div>
     </section>
   );

@@ -1,0 +1,67 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() { return request.auth != null; }
+    function isAdmin() {
+      return signedIn()
+        && get(/databases/$(database)/documents/perfiles/$(request.auth.uid)).data.rol == 'admin';
+    }
+    function reservationPath(uid, eventId) {
+      return /databases/$(database)/documents/perfiles/$(uid)/reservas/$(eventId);
+    }
+    function eventPath(eventId) {
+      return /databases/$(database)/documents/eventos/$(eventId);
+    }
+    function oldQty(uid, eventId) {
+      return exists(reservationPath(uid, eventId))
+        ? get(reservationPath(uid, eventId)).data.cantidad : 0;
+    }
+    function newQty(uid, eventId) {
+      return existsAfter(reservationPath(uid, eventId))
+        ? getAfter(reservationPath(uid, eventId)).data.cantidad : 0;
+    }
+    function stockMatches(uid, eventId) {
+      return exists(eventPath(eventId))
+        && existsAfter(eventPath(eventId))
+        && getAfter(eventPath(eventId)).data.stock
+          == get(eventPath(eventId)).data.stock + oldQty(uid, eventId) - newQty(uid, eventId);
+    }
+
+    match /perfiles/{uid} {
+      allow create: if signedIn() && request.auth.uid == uid
+        && request.resource.data.rol == 'usuario';
+      allow read: if signedIn() && (request.auth.uid == uid || isAdmin());
+      allow update: if signedIn() && request.auth.uid == uid
+        && request.resource.data.rol == resource.data.rol;
+      allow delete: if isAdmin();
+
+      match /reservas/{eventId} {
+        allow read: if signedIn() && (request.auth.uid == uid || isAdmin());
+        allow create, update: if signedIn() && request.auth.uid == uid
+          && request.resource.data.usuarioId == uid
+          && request.resource.data.cantidad is int
+          && request.resource.data.cantidad > 0
+          && stockMatches(uid, eventId);
+        allow delete: if signedIn() && request.auth.uid == uid
+          && stockMatches(uid, eventId);
+      }
+    }
+
+    match /eventos/{eventId} {
+      allow read: if true;
+      allow create, delete: if isAdmin();
+      allow update: if isAdmin() || (
+        signedIn()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['stock'])
+        && request.resource.data.stock >= 0
+        && request.resource.data.stock <= resource.data.totalEntradas
+        && stockMatches(request.auth.uid, eventId)
+      );
+    }
+
+    match /libros/{bookId} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+  }
+}
