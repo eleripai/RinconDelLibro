@@ -19,6 +19,7 @@ function PublicLayout({ children }) {
 export default function App() {
   return (
     <AuthProvider>
+      <CargaDeRuta>
       <Routes>
         <Route
           path="/"
@@ -52,6 +53,7 @@ export default function App() {
         <Route path="/registro" element={<Registro />} />
         <Route path="/login" element={<InicioSesion />} />
       </Routes>
+      </CargaDeRuta>
     </AuthProvider>
   );
 }
