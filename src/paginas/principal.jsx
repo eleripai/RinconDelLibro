@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 // 1. IMPORTACIÓN DE FIREBASE: Traemos las funciones para consultar la base de datos Firestore
 import { collection, getDocs } from 'firebase/firestore';
-import { db } from '../js/firebase'; // Asegúrate de que la ruta sea correcta hacia tu archivo firebase.js
+import { db } from '../firebase';// Asegúrate de que la ruta sea correcta hacia tu archivo firebase.js
 import '../css/principal.css';
 import '../js/principal.js';
 import fondomenu from "../assets/imagenesL/fondomenu.jpg";
@@ -31,54 +31,8 @@ export default function Principal() {
         setLoading(false);
       }
     };
-
-  //borrar
-  const libros = [
-    {
-      id: 1,
-      titulo: 'Pinocho',
-      autor: 'Carlo Collodi',
-      descripcion: 'Un humilde carpintero llamado Geppetto fabrica un muñeco de madera que cobra vida. Tras meterse en constantes problemas y mentiras, deberá aprender sobre el esfuerzo y la honestidad para convertirse en un niño de verdad.',
-      imagen: pinocho
-    },
-    {
-      id: 2,
-      titulo: 'Gatos Guerreros',
-      autor: 'Erin Hunter',
-      descripcion: 'Narra la historia de cuatro clanes de felinos salvajes que coexisten en un bosque guiados por sus propias leyes y un estricto código de honor.',
-      imagen: gatosguerreros
-
-     
-    },
-    {
-      id: 3,
-      titulo: 'El Principito',
-      autor: 'Antoine de Saint-Exupéry',
-      descripcion: 'Un cuento poético sobre un pequeño príncipe que viaja por el universo descubriendo la forma en que los adultos ven la vida.',
-      imagen: principitoL
-    },
-    {
-      id: 4,
-      titulo: 'Ana Frank',
-      autor: 'Ana Frank',
-      descripcion: 'El diario de Ana Frank es el testimonio real de una niña judía de trece años que debe ocultarse junto a su familia para escapar de la persecución nazi.',
-      imagen: AnafrankL
-    },
-    {
-      id: 5,
-      titulo: 'Cruce de caminos',
-      autor: 'Naira Gamboa',
-      descripcion: 'Novela de ficción psicológica centrada en las decisiones personales y cómo los caminos de distintas personas se entrelazan al enfrentar pérdidas o dilemas morales.',
-      imagen: cruceL
-    },
-    {
-      id: 6,
-      titulo: 'El león, la bruja y el ropero',
-      autor: 'C. S. Lewis',
-      descripcion: 'Cuatro hermanos descubren un ropero mágico que los lleva a Narnia, un mundo dominado por un invierno eterno. Junto a Aslan, lucharán para liberar el reino.',
-      imagen: leonbrujaropero
-    }
-  ];
+    obtenerLibrosDeFirebase();
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -92,7 +46,7 @@ export default function Principal() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
+// 2. DETECTAR TARJETAS: Se vuelve a ejecutar cuando cambian los libros para animar cada tarjeta en pantalla
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -109,7 +63,7 @@ export default function Principal() {
     bookCards.forEach((card) => observer.observe(card));
 
     return () => observer.disconnect();
-  }, []);
+  }, [libros]);
 
   const scrollToTop = () => {
     window.scrollTo({
@@ -135,7 +89,7 @@ export default function Principal() {
         minHeight: '100vh'
       }}
     >
-<section id="inicio" className="seccion-hero">
+      <section id="inicio" className="seccion-hero">
         <div className="hero-overlay"></div>
         <div className="hero-contenido">
           <div className="hero-columna">
@@ -169,47 +123,57 @@ export default function Principal() {
         </div>
       </section>
 
-     
-
-        <section id="libros" className="seccion-catalogo">
+      <section id="libros" className="seccion-catalogo">
         <div className="encabezado-catalogo">
           <h2 className="titulo-catalogo font-serif">Los más comprados</h2>
           <p className="subtitulo-catalogo">Desplaza hacia abajo para conocer los favoritos de los lectores</p>
         </div>
 
-        <div className="grilla-libros">
-          {libros.map((libro, index) => (
-            <div key={libro.id} className="columna-tarjeta">
-              <div 
-                className="tarjeta-libro custom-book-card" 
-                style={{ 
-                  transitionDelay: `${(index % 3) * 0.15}s`
-                }}
-              >
-                {libro.imagen && (
-                  <div className="card-img-container">
-                    <img
-                      src={libro.imagen}
-                      className="book-image"
-                      alt={libro.titulo}
-                    />
-                  </div>
-                )}
+        {/* 3. MENSAJE DE CARGA: Muestra este texto mientras Firebase responde */}
+        {loading ? (
+          <p style={{ textAlign: 'center', padding: '40px', fontSize: '1.2rem', color: '#351903' }}>
+            Cargando biblioteca desde la base de datos...
+          </p>
+        ) : (
+          /* 4. GRILLA DE LIBROS: Dibuja las tarjetas en pantalla usando los datos que trajimos */
+          <div className="grilla-libros">
+            {libros.map((libro, index) => (
+              <div key={libro.id} className="columna-tarjeta">
+                <div 
+                  className="tarjeta-libro custom-book-card" 
+                  style={{ 
+                    // Ordena la animación de aparición de las tarjetas de 5 en 5 columnas
+                    transitionDelay: `${(index % 5) * 0.1}s`
+                  }}
+                >
+                  {libro.imagen && (
+                    <div className="card-img-container">
+                      <img
+                        src={libro.imagen}
+                        className="book-image"
+                        alt={libro.titulo}
+                      />
+                    </div>
+                  )}
 
-                <div className="cuerpo-tarjeta">
-                  <div className="detalles-libro">
-                    <h5 className="titulo-libro font-serif">{libro.titulo}</h5>
-                    <h6 className="autor-libro">{libro.autor}</h6>
-                    <p className="descripcion-libro">
-                      {libro.descripcion}
-                    </p>
+                  <div className="cuerpo-tarjeta">
+                    <div className="detalles-libro">
+                      <h5 className="titulo-libro font-serif">{libro.titulo}</h5>
+                      <h6 className="autor-libro">{libro.autor}</h6>
+                      <p className="descripcion-libro">
+                        {libro.descripcion}
+                      </p>
+                    </div>
+                    //nos lleva a la pagina libros para ver el libro.
+                    <Link to={`/libros/${libro.id}`} className="boton-ver-libro">
+                      Ver Libro
+                    </Link>
                   </div>
-                  <a href="#comprar" className="boton-ver-libro">Ver Libro</a>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </section>
 
       {/* BOTÓN VOLVER ARRIBA */}
@@ -225,3 +189,4 @@ export default function Principal() {
     </div>
   );
 }
+
