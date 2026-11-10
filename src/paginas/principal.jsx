@@ -3,14 +3,19 @@ import { Link } from 'react-router-dom';
 // 1. IMPORTACIÓN DE FIREBASE: Traemos las funciones para consultar la base de datos Firestore
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../js/firebase'; // Asegúrate de que la ruta sea correcta hacia tu archivo firebase.js
-
 import '../css/principal.css';
 import '../js/principal.js';
 import fondomenu from "../assets/imagenesL/fondomenu.jpg";
+
 export default function Principal() {
   const [searchTerm, setSearchTerm] = useState('');
   const [showScrollTop, setShowScrollTop] = useState(false);
+// reemplazamos el arreglo estático por un estado vacío 
+  const [libros, setLibros] = useState([]);
+  // que se llenará automáticamente con los libros que ya están guardados en Firebase.
+  const [loading, setLoading] = useState(true);
 
+  //borrar
   const libros = [
     {
       id: 1,
