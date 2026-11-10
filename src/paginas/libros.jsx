@@ -1,7 +1,6 @@
 import { collection, onSnapshot, doc, setDoc, deleteDoc } from 'firebase/firestore';
 import { db } from '../firebase.js';
 import React, { useEffect, useMemo, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
 import { useSearchParams, useParams, useNavigate } from 'react-router-dom'; //importamos parametros para recorrorer libros
 import { useAuth } from '../contextos/AuthContext.jsx';
 import '../css/libros.css';
