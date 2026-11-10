@@ -116,9 +116,9 @@ export default function Principal() {
             </p>
 
             <div className="hero-acciones">
-              <button className="boton-hero-comprar">
+              <Link className="boton-hero-comprar" to="/libros">
                 COMPRAR &rarr;
-              </button>
+              </Link>
             </div>
           </div>
         </div>
