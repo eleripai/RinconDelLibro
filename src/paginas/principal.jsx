@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 // 1. IMPORTACIÓN DE FIREBASE: Traemos las funciones para consultar la base de datos Firestore
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../firebase';// Asegúrate de que la ruta sea correcta hacia tu archivo firebase.js
+import Cargando from '../componentes/cargando'; // <-- IMPORTAMOS TU COMPONENTE CARGANDO
 import '../css/principal.css';
 import '../js/principal.js';
 import fondomenu from "../assets/imagenesL/fondomenu.jpg";
@@ -132,7 +133,7 @@ export default function Principal() {
         {/* 3. MENSAJE DE CARGA: Muestra este texto mientras Firebase responde */}
         {loading ? (
           <p style={{ textAlign: 'center', padding: '40px', fontSize: '1.2rem', color: '#351903' }}>
-            Cargando biblioteca desde la base de datos...
+            Cargando 
           </p>
         ) : (
           /* 4. GRILLA DE LIBROS: Dibuja las tarjetas en pantalla usando los datos que trajimos */
