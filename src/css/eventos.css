@@ -401,3 +401,61 @@ button:disabled {
     border-radius: 14px;
   }
 }
+
+/* Capas de modales: deben quedar por encima del header sticky compartido. */
+.modal-overlay { z-index: 1200; }
+.eventos-section { position: relative; }
+.evento-format-badge { position:absolute; top:.75rem; left:.75rem; }
+.eventos-header { margin-bottom:2rem; }
+.eventos-admin-bar { display:flex; align-items:center; justify-content:space-between; gap:1rem; padding:1rem 1.25rem; margin:0 0 1.5rem; background:#f2f5e8; border:1px solid rgba(141,164,50,.4); border-radius:var(--radius-lg); }
+.eventos-admin-bar>div { display:flex; align-items:center; gap:.7rem; color:var(--c-dark-moss-green); }
+.eventos-admin-bar span { color:var(--text-muted); font-size:.8rem; }
+.evento-admin-form { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:.8rem; padding:1.4rem; margin-bottom:2rem; border:1px solid var(--border-subtle); border-radius:var(--radius-lg); background:#fff; box-shadow:var(--shadow-sm); }
+.evento-admin-form h3 { grid-column:1/-1; margin:0 0 .3rem; color:var(--c-bistre); }
+.evento-admin-form input,.evento-admin-form select,.evento-admin-form textarea { width:100%; min-width:0; padding:.75rem .85rem; border:1px solid var(--border-subtle); border-radius:9px; background:var(--bg-input); color:var(--c-bistre); font:inherit; }
+.evento-admin-form .wide { grid-column:1/-1; }
+.evento-admin-form textarea { min-height:95px; resize:vertical; }
+.evento-admin-actions { display:flex; gap:.7rem; }
+.eventos-filter-controls { display:flex; gap:.75rem; flex-wrap:wrap; }
+.evento-meta,.evento-card-bottom,.evento-place { display:flex; align-items:center; justify-content:space-between; gap:.5rem; }
+.evento-meta { font-size:.75rem; margin-bottom:.6rem; color:var(--c-dark-moss-green); font-weight:700; }
+.evento-meta span:last-child,.evento-place,.evento-card-bottom>span { display:flex; align-items:center; gap:.3rem; }
+.evento-card h3 { font-size:1.2rem; line-height:1.3; margin:0 0 .4rem; color:var(--c-bistre); }
+.evento-book { font-size:.825rem; color:var(--text-secondary); margin:0; }
+.evento-place { justify-content:flex-start; font-size:.8rem; color:var(--text-muted); margin:.5rem 0 0; }
+.evento-card-bottom { padding-top:.8rem; border-top:1px solid var(--border-subtle); font-size:.75rem; color:var(--text-muted); }
+.evento-reservation-badge,.evento-current-booking { display:inline-flex; align-items:center; gap:.35rem; margin-top:.65rem; padding:.4rem .6rem; background:var(--bg-badge); border:1px solid var(--c-apple-green); border-radius:7px; color:var(--c-dark-moss-green); font-size:.75rem; }
+.evento-modal-content { z-index:1201; }
+.evento-modal-content h2 { margin:.9rem 0 .3rem; color:var(--c-bistre); font:700 1.65rem Georgia,serif; }
+.evento-modal-content>p { color:var(--text-secondary); line-height:1.6; font-size:.9rem; }
+.evento-modal-book { font-weight:700; }
+.evento-reserva-form { display:flex; flex-direction:column; gap:.9rem; margin-top:1rem; }
+.evento-reserva-form label { display:flex; flex-direction:column; gap:.4rem; font-size:.82rem; font-weight:700; color:var(--c-bistre); }
+.evento-reserva-form input,.evento-reserva-form select { width:100%; padding:.7rem .8rem; border:1px solid var(--border-subtle); border-radius:8px; background:var(--bg-input); color:var(--c-bistre); font:inherit; }
+.evento-modal-actions { display:flex; justify-content:flex-end; flex-wrap:wrap; gap:.6rem; }
+.btn-cancel-reserva { padding:.6rem .9rem; border:1px solid #b52e2e; border-radius:9px; color:#a32121; background:#fff4f2; font-weight:700; cursor:pointer; }
+.evento-login-note,.evento-error { color:#a32121; font-size:.82rem; }
+.evento-success { padding:.8rem 1rem; margin:1rem 0; border-radius:9px; background:#edf5e8; color:#365004; }
+.evento-admin-list { margin-top:2.5rem; padding:1.2rem; background:#fff; border:1px solid var(--border-subtle); border-radius:var(--radius-lg); }
+.evento-admin-list h3 { margin:0 0 1rem; }
+.evento-admin-row { display:flex; align-items:center; justify-content:space-between; gap:1rem; padding:.85rem 0; border-top:1px solid var(--border-subtle); }
+.evento-admin-row span { display:flex; flex-direction:column; gap:.25rem; }
+.evento-admin-row small { color:var(--text-muted); }
+.evento-admin-row button { display:inline-flex; align-items:center; gap:.35rem; margin-left:.4rem; padding:.45rem .65rem; border:1px solid var(--border-subtle); border-radius:7px; background:white; cursor:pointer; }
+.evento-admin-row .danger { color:#a32121; }
+.evento-empty { padding:3rem; align-items:center; justify-content:center; text-align:center; }
+@media(max-width:760px) {
+ .evento-admin-form { grid-template-columns:1fr 1fr; }
+ .eventos-admin-bar { align-items:flex-start; flex-direction:column; }
+}
+@media(max-width:520px) {
+ .evento-admin-form { grid-template-columns:1fr; }
+ .evento-admin-form .wide { grid-column:auto; }
+ .eventos-filter-controls { width:100%; }
+ .eventos-filter-controls select { flex:1; min-width:0; }
+ .evento-admin-row { align-items:flex-start; flex-direction:column; }
+ .evento-admin-row>div { display:flex; gap:.5rem; }
+ .evento-admin-row button { margin:0; }
+ .evento-modal-actions { flex-direction:column-reverse; }
+ .evento-modal-actions button { width:100%; }
+}

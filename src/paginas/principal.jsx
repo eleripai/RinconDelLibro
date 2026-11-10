@@ -116,32 +116,7 @@ export default function Principal() {
         minHeight: '100vh'
       }}
     >
-      <header className="encabezado-prin">
-        <div className= "encabezado-contenedor" >
-          <div className="encabezado-logo">
-            <div>
-              <h2 className="h6 mb-0 fw-bold">Rincón del Libro</h2>
-            </div>
-          </div>
-
-        <nav className="menu-nagacion">
-            <Link to="/" className="enlace-nav acitve-link">Inicio</Link>
-            <Link to="/libros" className="enlace-nav">Libros</Link>
-            <Link to="/eventos" className="enlace-nav">Eventos</Link>            
-            <Link to="/nosotros" className="enlace-nav">Sobre nosotros</Link>
-          </nav>
-
-          <div className="seccion-usuario-header">
-            <Link className="boton-registro-header" to="/registro">Registrarse</Link>
-            <div className="contenedor-carrito">
-              <button className="boton-carrito">🛒</button>
-              <span className="insignia-carrito">-</span>
-            </div>
-          </div>
-        </div>
-      </header>
-      
-      <section id="inicio" className="seccion-hero">
+<section id="inicio" className="seccion-hero">
         <div className="hero-overlay"></div>
         <div className="hero-contenido">
           <div className="hero-columna">

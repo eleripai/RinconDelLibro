@@ -1,9 +1,10 @@
+import { collection, onSnapshot, doc, setDoc, deleteDoc } from 'firebase/firestore';
+import { db } from '../firebase.js';
 import React, { useEffect, useMemo, useState } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
-import { LIBROS_INICIALES } from '../datos/libros.js';
+import { useSearchParams } from 'react-router-dom';
+import { useAuth } from '../contextos/AuthContext.jsx';
 import '../css/libros.css';
 
-const DB_KEY = 'rincon-del-libro-db-v2';
 const FAVORITOS_KEY = 'rincon-del-libro-favoritos';
 const LECTURA_KEY = 'rincon-del-libro-lectura';
 const CATEGORIAS_BASE = ['Todas', 'Novela', 'Fantasía', 'Ciencia ficción', 'Romance', 'Clásicos', 'Misterio', 'Realismo mágico', 'Terror', 'Aventura'];
@@ -69,13 +70,13 @@ function AdminPanel({ libros, onSave, onDelete, onClose }) {
   const submit = (e) => {
     e.preventDefault();
     if (!form.titulo.trim() || !form.autor.trim()) return;
-    onSave({ ...form, id: editingId || Date.now(), año: Number(form.año), paginas: Number(form.paginas), rating: Number(form.rating) });
+    onSave({ ...form, id: editingId || String(Date.now()), año: Number(form.año), paginas: Number(form.paginas), rating: Number(form.rating) });
     setForm(empty); setEditingId(null);
   };
 
   return (
     <section className="admin-panel" id="admin">
-      <div className="admin-title"><div><span>ADMINISTRACIÓN</span><h2>{editingId ? 'Editar libro' : 'Agregar libro'}</h2><p>Los cambios se guardan automáticamente en la base de datos local del navegador.</p></div><button onClick={onClose} className="admin-close">Cerrar ×</button></div>
+      <div className="admin-title"><div><span>ADMINISTRACIÓN</span><h2>{editingId ? 'Editar libro' : 'Agregar libro'}</h2><p>Los cambios se guardan en la base de datos de la biblioteca.</p></div><button onClick={onClose} className="admin-close">Cerrar ×</button></div>
       <form className="book-form" onSubmit={submit}>
         <input placeholder="Título" value={form.titulo} onChange={(e) => change('titulo', e.target.value)} required />
         <input placeholder="Autor" value={form.autor} onChange={(e) => change('autor', e.target.value)} required />
@@ -97,7 +98,10 @@ function AdminPanel({ libros, onSave, onDelete, onClose }) {
 
 export default function Libros() {
   const [searchParams] = useSearchParams();
-  const [libros, setLibros] = useState(() => readStorage(DB_KEY, LIBROS_INICIALES));
+  const { esAdmin } = useAuth();
+  const [libros, setLibros] = useState([]);
+const [cargandoLibros, setCargandoLibros] = useState(true);
+const [errorLibros, setErrorLibros] = useState('');
   const [busqueda, setBusqueda] = useState(() => searchParams.get('buscar') || '');
   const [categoria, setCategoria] = useState(() => searchParams.get('categoria') || 'Todas');
   const [orden, setOrden] = useState('relevancia');
@@ -111,7 +115,30 @@ export default function Libros() {
   const [toast, setToast] = useState('');
   const [showTop, setShowTop] = useState(false);
 
-  useEffect(() => localStorage.setItem(DB_KEY, JSON.stringify(libros)), [libros]);
+  useEffect(() => {
+  const referenciaLibros = collection(db, 'libros');
+
+  const cancelar = onSnapshot(
+    referenciaLibros,
+    (snapshot) => {
+      const librosFirebase = snapshot.docs.map((documento) => ({
+        ...documento.data(),
+        id: documento.id,
+      }));
+
+      setLibros(librosFirebase);
+      setCargandoLibros(false);
+      setErrorLibros('');
+    },
+    (error) => {
+      console.error('Error al cargar los libros:', error);
+      setErrorLibros('No se pudieron cargar los libros. Intentá nuevamente.');
+      setCargandoLibros(false);
+    }
+  );
+
+  return () => cancelar();
+}, []);
   useEffect(() => localStorage.setItem(FAVORITOS_KEY, JSON.stringify(favoritos)), [favoritos]);
   useEffect(() => localStorage.setItem(LECTURA_KEY, JSON.stringify(lectura)), [lectura]);
   useEffect(() => { const onScroll = () => setShowTop(window.scrollY > 500); window.addEventListener('scroll', onScroll); return () => window.removeEventListener('scroll', onScroll); }, []);
@@ -133,21 +160,45 @@ export default function Libros() {
   const toggleFavorite = (id) => setFavoritos(old => old.includes(id) ? old.filter(x => x !== id) : [...old, id]);
   const toggleReading = (id) => setLectura(old => old.includes(id) ? old.filter(x => x !== id) : [...old, id]);
   const reset = () => { setBusqueda(''); setCategoria('Todas'); setSoloDisponibles(false); setSoloFavoritos(false); setOrden('relevancia'); };
-  const saveBook = (book) => { setLibros(old => old.some(x => x.id === book.id) ? old.map(x => x.id === book.id ? book : x) : [book, ...old]); setToast('✓ Biblioteca actualizada'); };
-  const deleteBook = (id) => { setLibros(old => old.filter(x => x.id !== id)); setFavoritos(old => old.filter(x => x !== id)); setLectura(old => old.filter(x => x !== id)); setToast('Libro eliminado'); };
+  const saveBook = async (book) => {
+    if (!esAdmin) return;
+    try {
+      const id = String(book.id);
+      const { id: _id, ...datos } = book;
+      await setDoc(doc(db, 'libros', id), datos, { merge: true });
+      setToast('✓ Libro guardado en la base de datos');
+    } catch (error) {
+      console.error('Error al guardar libro:', error);
+      setToast('No se pudo guardar el libro. Revisá los permisos de Firestore.');
+    }
+  };
+  const deleteBook = async (id) => {
+    if (!esAdmin) return;
+    try {
+      await deleteDoc(doc(db, 'libros', String(id)));
+      setFavoritos(old => old.filter(x => x !== id));
+      setLectura(old => old.filter(x => x !== id));
+      setToast('Libro eliminado');
+    } catch (error) {
+      console.error('Error al eliminar libro:', error);
+      setToast('No se pudo eliminar el libro.');
+    }
+  };
 
   return (
     <div className="biblioteca-page">
-      <header className="library-nav"><Link to="/" className="brand">Rincón <span>del Libro</span></Link><nav><Link to="/">Inicio</Link><a className="active" href="#coleccion">Libros</a><a href="#categorias">Categorías</a><a href="#estadisticas">Nuestra colección</a></nav><div className="nav-tools"><button onClick={() => setSoloFavoritos(v => !v)} className={soloFavoritos ? 'tool active' : 'tool'}>♥ <span>Favoritos</span></button><button className="admin-toggle" onClick={() => setAdminOpen(v => !v)}>⚙ Administrar</button></div></header>
-
-      <main>
+<main>
         <section className="library-hero">
           <div className="hero-copy"><span className="library-eyebrow">NUESTRA COLECCIÓN · {stats.total} LIBROS</span><h1>Una biblioteca<br /><em>llena de historias.</em></h1><p>Explorá, filtrá y descubrí tu próxima lectura. Guardá favoritos y armá tu propia lista.</p><div className="hero-mini-stats"><span><b>{stats.disponibles}</b> disponibles</span><span><b>{stats.categorias}</b> categorías</span><span><b>{stats.favoritos}</b> favoritos</span></div></div><div className="hero-stack"><div className="stack-card one">✦</div><div className="stack-card two">LIBROS</div><div className="stack-card three">RDL</div></div>
         </section>
 
-        {adminOpen && <AdminPanel libros={libros} onSave={saveBook} onDelete={deleteBook} onClose={() => setAdminOpen(false)} />}
+        {esAdmin && <div className="library-admin-access"><button className="admin-toggle" onClick={() => setAdminOpen(v => !v)}>{adminOpen ? 'Cerrar administración' : '⚙ Administración'}</button></div>}
+        {esAdmin && adminOpen && <AdminPanel libros={libros} onSave={saveBook} onDelete={deleteBook} onClose={() => setAdminOpen(false)} />}
 
         <section id="coleccion" className="library-content">
+          {cargandoLibros && <p role="status">Cargando libros...</p>}
+
+{errorLibros && <p role="alert">{errorLibros}</p>}
           <div className="search-box"><span>⌕</span><input value={busqueda} onChange={e => setBusqueda(e.target.value)} placeholder="Buscar por título, autor o categoría..." />{busqueda && <button onClick={() => setBusqueda('')}>×</button>}<kbd>Ctrl K</kbd></div>
           <div className="filter-toolbar"><div className="quick-categories" id="categorias">{categorias.map(cat => <button key={cat} className={categoria === cat ? 'quick active' : 'quick'} onClick={() => setCategoria(cat)}>{cat}</button>)}</div><div className="filters"><select value={orden} onChange={e => setOrden(e.target.value)}><option value="relevancia">Más recomendados</option><option value="titulo">Título A-Z</option><option value="autor">Autor A-Z</option><option value="nuevo">Más recientes</option><option value="paginas">Más páginas</option></select><label><input type="checkbox" checked={soloDisponibles} onChange={e => setSoloDisponibles(e.target.checked)} /> Disponibles</label><button className="view-btn" onClick={() => setVista(v => v === 'grid' ? 'list' : 'grid')} title="Cambiar vista">{vista === 'grid' ? '☷' : '▦'}</button></div></div>
 
@@ -161,8 +212,7 @@ export default function Libros() {
 
         <section id="estadisticas" className="stats-section"><div><span>LA BIBLIOTECA EN NÚMEROS</span><h2>Hay una historia esperando por vos.</h2></div><div className="stats-grid"><div><strong>{stats.total}</strong><span>Libros</span></div><div><strong>{stats.disponibles}</strong><span>Disponibles</span></div><div><strong>{stats.categorias}</strong><span>Categorías</span></div><div><strong>{stats.favoritos}</strong><span>Favoritos</span></div></div></section>
       </main>
-      <footer className="library-footer"><Link to="/">← Volver al inicio</Link><span>Rincón del Libro · Biblioteca digital</span><button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>Volver arriba ↑</button></footer>
-      {showTop && <button className="floating-top" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>↑</button>}
+{showTop && <button className="floating-top" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>↑</button>}
       {seleccionado && <BookModal libro={seleccionado} favorito={favoritos.includes(seleccionado.id)} enLectura={lectura.includes(seleccionado.id)} onClose={() => setSeleccionado(null)} onFavorite={() => { toggleFavorite(seleccionado.id); setToast(favoritos.includes(seleccionado.id) ? 'Quitado de favoritos' : '♥ Agregado a favoritos'); }} onReading={() => { toggleReading(seleccionado.id); setToast(lectura.includes(seleccionado.id) ? 'Quitado de tu lista' : '✓ Agregado a tu lista de lectura'); }} />}
       {toast && <div className="toast">{toast}</div>}
     </div>
