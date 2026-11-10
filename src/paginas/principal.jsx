@@ -15,6 +15,23 @@ export default function Principal() {
   // que se llenará automáticamente con los libros que ya están guardados en Firebase.
   const [loading, setLoading] = useState(true);
 
+  //consultamos a la firebasey obtenemos los libros que estan en la firestore al cargar la pag
+  useEffect(() => {
+    const obtenerLibrosDeFirebase = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "libros"));
+        const listaLibros = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+        setLibros(listaLibros);
+      } catch (error) {
+        console.error("Error al obtener los libros de Firebase:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
   //borrar
   const libros = [
     {
