@@ -9,6 +9,7 @@ import Eventos from './paginas/eventos.jsx';
 import Nosotros from './paginas/sobreNosotros.jsx';
 import Libros from './paginas/libros.jsx';
 import SiteLayout from './componentes/SiteLayout.jsx';
+import CargaDeRuta from './componentes/CargaDeRuta.jsx'; // spinner al cambiar de página
 
 import { AuthProvider } from './contextos/AuthContext.jsx';
 
