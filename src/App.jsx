@@ -11,6 +11,7 @@ import Libros from './paginas/libros.jsx';
 import SiteLayout from './componentes/SiteLayout.jsx';
 
 import { AuthProvider } from './contextos/AuthContext.jsx';
+import CargaDeRuta from './componentes/CargaDeRuta.jsx';
 
 function PublicLayout({ children }) {
   return <SiteLayout>{children}</SiteLayout>;
