@@ -111,12 +111,17 @@ const [errorLibros, setErrorLibros] = useState('');
   const [soloDisponibles, setSoloDisponibles] = useState(false);
   const [soloFavoritos, setSoloFavoritos] = useState(false);
   const [vista, setVista] = useState('grid');
-  const [seleccionado, setSeleccionado] = useState(null);
   const [favoritos, setFavoritos] = useState(() => readStorage(FAVORITOS_KEY, []));
   const [lectura, setLectura] = useState(() => readStorage(LECTURA_KEY, []));
   const [adminOpen, setAdminOpen] = useState(false);
   const [toast, setToast] = useState('');
   const [showTop, setShowTop] = useState(false);
+
+  // El libro abierto en el modal lo define la URL (/libros/:id)
+  const seleccionado = useMemo(
+    () => libros.find((l) => String(l.id) === id) || null,
+    [libros, id]
+  );
 
   useEffect(() => {
   const referenciaLibros = collection(db, 'libros');
