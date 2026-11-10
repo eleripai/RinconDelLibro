@@ -164,10 +164,11 @@ export default function Principal() {
                         {libro.descripcion}
                       </p>
                     </div>
-                      <Link to="/libros" className="boton-ver-libro">
-                            Ver Libro
-</Link>                  
-</div>
+                       {/* Le pasamos el ID único del libro a la URL */}
+                        <Link to={`/libros/${libro.id}`} className="boton-ver-libro">
+                        Ver Libro
+                            </Link>           
+                              </div>
                 </div>
               </div>
             ))}
