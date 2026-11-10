@@ -15,31 +15,7 @@ import {
 export default function SobreNosotros() {
   return (
     <div className="sobre-nosotros-container">
-      {/* HEADER / NAVEGACIÓN */}
-    <header className="encabezado-prin">
-  <div className="encabezado-contenedor">
-    <div className="encabezado-logo">
-      <div>
-        <h2 className="h6 mb-0 fw-bold">Rincón del Libro</h2>
-      </div>
-    </div>
-
-    <nav className="menu-nagacion">
-      <a href="/Principal" className="enlace-nav acitve-link">Inicio</a>
-      <a href="#libros" className="enlace-nav">Libros</a>
-      <a href="/eventos" className="enlace-nav">Eventos</a>                 
-      <a href="#nosotros" className="enlace-nav">Sobre nosotros</a>
-    </nav>
-
-    <div className="seccion-usuario-header">
-            <Link className="boton-registro-header" to="/registro">Registrarse</Link>
-            <div className="contenedor-carrito">
-              <button className="boton-carrito">🛒</button>
-              <span className="insignia-carrito">-</span>
-            </div>
-          </div>
-        </div>
-      </header>
+     
 
       {/* CONTENIDO PRINCIPAL */}
       <main className="main-content">
