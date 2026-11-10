@@ -41,7 +41,7 @@ export default function App() {
         />
 
         <Route
-          path="/Libros"
+          path="/libros"
           element={<PublicLayout><Libros /></PublicLayout>}
         />
         {/* NUEVA RUTA: Ruta dinámica para ver el detalle de un libro específico */}
