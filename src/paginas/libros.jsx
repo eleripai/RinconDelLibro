@@ -2,6 +2,7 @@ import { collection, onSnapshot, doc, setDoc, deleteDoc } from 'firebase/firesto
 import { db } from '../firebase.js';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useParams, useNavigate } from 'react-router-dom'; //importamos parametros para recorrorer libros
 import { useAuth } from '../contextos/AuthContext.jsx';
 import '../css/libros.css';
 
@@ -98,6 +99,8 @@ function AdminPanel({ libros, onSave, onDelete, onClose }) {
 
 export default function Libros() {
   const [searchParams] = useSearchParams();
+   const { id } = useParams(); //declaramos el id de los libros
+  const navigate = useNavigate();// declaramos navigate
   const { esAdmin } = useAuth();
   const [libros, setLibros] = useState([]);
 const [cargandoLibros, setCargandoLibros] = useState(true);
