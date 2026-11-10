@@ -44,6 +44,10 @@ export default function App() {
           path="/Libros"
           element={<PublicLayout><Libros /></PublicLayout>}
         />
+        {/* NUEVA RUTA: Ruta dinámica para ver el detalle de un libro específico */}
+        <Route path="/libros/:id"
+        element={<PublicLayout><Libros /></PublicLayout>}
+      />
 
         <Route path="/registro" element={<Registro />} />
         <Route path="/login" element={<InicioSesion />} />

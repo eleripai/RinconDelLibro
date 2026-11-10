@@ -164,11 +164,10 @@ export default function Principal() {
                         {libro.descripcion}
                       </p>
                     </div>
-                    //nos lleva a la pagina libros para ver el libro.
-                    <Link to={`/libros/${libro.id}`} className="boton-ver-libro">
-                      Ver Libro
-                    </Link>
-                  </div>
+                      <Link to="/libros" className="boton-ver-libro">
+                            Ver Libro
+</Link>                  
+</div>
                 </div>
               </div>
             ))}
