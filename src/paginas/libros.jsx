@@ -1,7 +1,7 @@
 import { collection, onSnapshot, doc, setDoc, deleteDoc } from 'firebase/firestore';
 import { db } from '../firebase.js';
 import React, { useEffect, useMemo, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contextos/AuthContext.jsx';
 import '../css/libros.css';
 
@@ -108,13 +108,18 @@ const [errorLibros, setErrorLibros] = useState('');
   const [soloDisponibles, setSoloDisponibles] = useState(false);
   const [soloFavoritos, setSoloFavoritos] = useState(false);
   const [vista, setVista] = useState('grid');
-  const [seleccionado, setSeleccionado] = useState(null);
-  const [favoritos, setFavoritos] = useState(() => readStorage(FAVORITOS_KEY, []));
+  const { id } = useParams();
+  const navigate = useNavigate();  const [favoritos, setFavoritos] = useState(() => readStorage(FAVORITOS_KEY, []));
   const [lectura, setLectura] = useState(() => readStorage(LECTURA_KEY, []));
   const [adminOpen, setAdminOpen] = useState(false);
   const [toast, setToast] = useState('');
   const [showTop, setShowTop] = useState(false);
 
+  // El libro abierto en el modal lo define la URL (/libros/:id)
+const seleccionado = useMemo(
+  () => libros.find((l) => String(l.id) === id) || null,
+  [libros, id]
+);
   useEffect(() => {
   const referenciaLibros = collection(db, 'libros');
 
@@ -206,14 +211,14 @@ const [errorLibros, setErrorLibros] = useState('');
 
           {filtrados.length ? <div className={`libros-grid ${vista === 'list' ? 'list-view' : ''}`}>{filtrados.map((libro, index) => <article className="libro-card" key={libro.id} style={{ '--delay': `${Math.min(index, 8) * 45}ms` }}>
             <div className="card-cover-wrap"><BookCover libro={libro} /><span className={`availability ${libro.disponible ? 'available' : ''}`}>{libro.disponible ? 'Disponible' : 'Prestado'}</span>{libro.destacado && <span className="featured">✦ Destacado</span>}<button className={`favorite ${favoritos.includes(libro.id) ? 'liked' : ''}`} onClick={() => toggleFavorite(libro.id)} aria-label="Favorito">{favoritos.includes(libro.id) ? '♥' : '♡'}</button></div>
-            <div className="card-info"><span className="card-category">{libro.categoria}</span><h3>{libro.titulo}</h3><p className="author">{libro.autor}</p><div className="card-meta"><span>★ {libro.rating}</span><span>📖 {libro.paginas} pág.</span><span>{formatYear(libro.año)}</span></div><button className="detail-btn" onClick={() => setSeleccionado(libro)}>Ver detalles <span>→</span></button></div>
+            <div className="card-info"><span className="card-category">{libro.categoria}</span><h3>{libro.titulo}</h3><p className="author">{libro.autor}</p><div className="card-meta"><span>★ {libro.rating}</span><span>📖 {libro.paginas} pág.</span><span>{formatYear(libro.año)}</span></div><button className="detail-btn" onClick={() => navigate(`/libros/${libro.id}`)}>Ver detalles <span>→</span></button></div>
           </article>)}</div> : <div className="empty-state"><div>⌕</div><h3>No encontramos libros</h3><p>Probá con otro término o limpiá los filtros.</p><button className="primary-btn" onClick={reset}>Restablecer filtros</button></div>}
         </section>
 
         <section id="estadisticas" className="stats-section"><div><span>LA BIBLIOTECA EN NÚMEROS</span><h2>Hay una historia esperando por vos.</h2></div><div className="stats-grid"><div><strong>{stats.total}</strong><span>Libros</span></div><div><strong>{stats.disponibles}</strong><span>Disponibles</span></div><div><strong>{stats.categorias}</strong><span>Categorías</span></div><div><strong>{stats.favoritos}</strong><span>Favoritos</span></div></div></section>
       </main>
 {showTop && <button className="floating-top" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>↑</button>}
-      {seleccionado && <BookModal libro={seleccionado} favorito={favoritos.includes(seleccionado.id)} enLectura={lectura.includes(seleccionado.id)} onClose={() => setSeleccionado(null)} onFavorite={() => { toggleFavorite(seleccionado.id); setToast(favoritos.includes(seleccionado.id) ? 'Quitado de favoritos' : '♥ Agregado a favoritos'); }} onReading={() => { toggleReading(seleccionado.id); setToast(lectura.includes(seleccionado.id) ? 'Quitado de tu lista' : '✓ Agregado a tu lista de lectura'); }} />}
+      {seleccionado && <BookModal libro={seleccionado} favorito={favoritos.includes(seleccionado.id)} enLectura={lectura.includes(seleccionado.id)} onClose={() => navigate('/libros')} onFavorite={() => { toggleFavorite(seleccionado.id); setToast(favoritos.includes(seleccionado.id) ? 'Quitado de favoritos' : '♥ Agregado a favoritos'); }} onReading={() => { toggleReading(seleccionado.id); setToast(lectura.includes(seleccionado.id) ? 'Quitado de tu lista' : '✓ Agregado a tu lista de lectura'); }} />}
       {toast && <div className="toast">{toast}</div>}
     </div>
   );

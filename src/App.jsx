@@ -9,9 +9,9 @@ import Eventos from './paginas/eventos.jsx';
 import Nosotros from './paginas/sobreNosotros.jsx';
 import Libros from './paginas/libros.jsx';
 import SiteLayout from './componentes/SiteLayout.jsx';
-import CargaDeRuta from './componentes/CargaDeRuta.jsx'; // spinner al cambiar de página
 
 import { AuthProvider } from './contextos/AuthContext.jsx';
+import CargaDeRuta from './componentes/CargaDeRuta.jsx';
 
 function PublicLayout({ children }) {
   return <SiteLayout>{children}</SiteLayout>;
@@ -20,7 +20,6 @@ function PublicLayout({ children }) {
 export default function App() {
   return (
     <AuthProvider>
-  {/* CargaDeRuta muestra el spinner cada vez que cambia la sección de la URL */}
       <CargaDeRuta>
       <Routes>
         <Route
